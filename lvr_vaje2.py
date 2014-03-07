@@ -15,13 +15,6 @@ class XOR():
         return "XOR"+str(self.formule)
 
     def vrednost(self, v):
-        """
-        # p ---> q = NOTp or q
-        b = self.formule[0]
-        for p in self.formule[1:]:
-            b = (not b) or p.vrednost(v)
-        return b
-        """
         p, q = self.formule[0], self.formule[1]
         return And([
             Or([p, q]),
@@ -33,11 +26,6 @@ def X2SATsudoku(vhod):
     """
         vhod - slovar (i,j) -> stevilka
         Xijk --- na (i,j) je k
-    """
-
-    """
-    stolpci = And()
-    kvadranti = And()
     """
 
     temp_vrstica = []
@@ -99,12 +87,7 @@ def X2SATsudoku(vhod):
                             V('X'+str(drugi_x)+str(drugi_y)+str(k))
                         ]))
     kvadranti = And(temp_kvadrat)
-
     return And([vrstice, stolpci, kvadranti])
-
-
-print X2SATsudoku({(4,5): 5, (1, 3): 9})
-    #return
 
 # Hadamardova matrika
 """
