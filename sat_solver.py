@@ -67,7 +67,8 @@ class And:
         self.formule = ps
 
     def __repr__(self):
-        return "∧" + str(self.formule)
+        return "(%s)" % (" ∧ ".join(str(f) for f in self.formule))
+
 
     def vrednost(self, v):
         b = True
@@ -85,7 +86,7 @@ class Or:
         self.formule = ps
 
     def __repr__(self):
-        return "∨" + str(self.formule)
+        return "(%s)" % (" ∨ ".join(str(f) for f in self.formule))
 
     def vrednost(self, v):
         b = False
@@ -103,7 +104,7 @@ class Imp:
         self.formule = formule
 
     def __repr__(self):
-        return "⇒" + str(self.formule)
+        return  "(%s)" % (" ⇒ ".join(str(f) for f in self.formule))
 
     def vrednost(self, v):
         # p ---> q = NOTp or q
@@ -116,10 +117,27 @@ class Imp:
         return str(self) == str(other)
 
 
-def simplify(formula):
-    print formula
+class XOR():
+    def __init__(self, formule):
+        self.formule = formule
+
+    def __repr__(self):
+        return "(%s)" % (" XOR ".join(str(f) for f in self.formule))
+
+    def vrednost(self, v):
+        p, q = self.formule[0], self.formule[1]
+        return And([
+            Or([p, q]),
+            Not(And([p, q]))
+        ]).vrednost(v)
+
+
+def simplify(formula, verbose=False):
+    if verbose:
+        print formula
     if formula.__class__.__name__ in ('V', 'Fls', 'Tru'):
-        print "Tukaj sem"
+        if verbose:
+            print "Tukaj sem"
         return formula
     elif formula.__class__.__name__ == 'Not':
         if formula.formula.__class__.__name__ == 'And':
@@ -149,19 +167,6 @@ def simplify(formula):
 
 
 
-class XOR():
-    def __init__(self, formule):
-        self.formule = formule
-
-    def __repr__(self):
-        return "XOR"+str(self.formule)
-
-    def vrednost(self, v):
-        p, q = self.formule[0], self.formule[1]
-        return And([
-            Or([p, q]),
-            Not(And([p, q]))
-        ]).vrednost(v)
 
 
 def X2SATsudoku(vhod):
@@ -270,32 +275,4 @@ def barvanje(G, b):
     # Prevedba je konjunkcija pogojev
     return And([vsaj_ena_barva, nobeno_dvakrat, povezani_nista_iste])
 
-
-""" Mešane funkcije, primerno za prevedbo na teste """
-
-def v1():
-    tabla = (And([Or([V("p"), V("q")]), Or([V("p"), V("r")])]))
-    tabla = Or([Imp([V("p"), V("q")]), V("p"), Imp([V("p"), V("q")])])
-    print tabla
-    print simplify(tabla)
-
-
-
-t1 = (And([Or([V("p"), V("q")]), Or([V("p"), V("r")])]))
-t2 = Or([Imp([V("p"), V("q")]), V("p"), Imp([V("p"), V("q")])])
-
-# Barvanje grafa
-def test_barvanje_grafa():
-    """
-        Primer uporabe za problem barvanja grafa
-    """
-    G = [
-        ('a', 'b'),
-        ('a', 'c'),
-        ('b', 'c'),
-        ('d', 'e'),
-        ('e', 'a')
-    ]
-    b = 3
-    print barvanje(G, b)
 
