@@ -174,7 +174,7 @@ print jani_formula
 # Valuacija - implementiraj s pomočjo sloVja
 v = {"p": True, "q": False, "r": True}
 
-print "Vrednost za v:", jani_formula.vrednost(v)
+print "Vrednost za v:", jani_formula.vrednost(v)a
 """
 
 def v1():

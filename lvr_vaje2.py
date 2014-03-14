@@ -88,17 +88,3 @@ def X2SATsudoku(vhod):
                         ]))
     kvadranti = And(temp_kvadrat)
     return And([vrstice, stolpci, kvadranti])
-
-# Hadamardova matrika
-"""
-Xij i,j € {1,2,m...}
-
-Xij = T, če (i,j) = 1
-Xij = F, če (i,j) = -1
-
-Formula:
-A (1<=i<j<=n ... za u.to in jto vrstico) do
-    "skalarni produkt i-te in jte vrstice je enak 0"
-    Namig: uporabi kakšne nove spremenljivke za računanje skalarnega produkta
-"""
-
