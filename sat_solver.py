@@ -108,7 +108,7 @@ class Imp:
 
     def vrednost(self, v):
         # p ---> q = NOTp or q
-        b = self.formule[0]
+        b = self.formule[0].vrednost(v)
         for p in self.formule[1:]:
             b = (not b) or p.vrednost(v)
         return b
@@ -274,5 +274,3 @@ def barvanje(G, b):
 
     # Prevedba je konjunkcija pogojev
     return And([vsaj_ena_barva, nobeno_dvakrat, povezani_nista_iste])
-
-
