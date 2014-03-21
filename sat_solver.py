@@ -141,8 +141,6 @@ def simplify(formula):
     else:
         return formula
 
-
-
 """
     Vaje 2 - prevedbe problemov
 """
