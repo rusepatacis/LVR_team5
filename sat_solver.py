@@ -145,17 +145,50 @@ def simplify(formula, verbose=False):
         if formula.formula.__class__.__name__ == 'Or':
             return And([simplify(Not(p)) for p in formula.formula.formule])
         if formula.formula.__class__.__name__ == 'Not':
-            return (simplify(formula.formula.formula))
-        if formula.formula.__class__.__name__ in ('V', 'Fls', 'Tru'):
+            return simplify(formula.formula.formula)
+        if formula.formula.__class__.__name__ == 'Fls':
+            return Tru()
+        if formula.formula.__class__.__name__ == 'Tru':
+            return Fls()
+        if formula.formula.__class__.__name__ == 'V':
             return Not(formula.formula)
+        return formula
     elif formula.__class__.__name__  in ('And', 'Or'):
+        if formula.__class__.__name__ == 'And':
+            for b in formula.formule:
+                if b == "Fls":
+                    return Fls()
+            for b in range(len(formula.formule)):
+                if formula.formule[b] == Tru():
+                    formula.formule.pop(b)
+            for a in range(len(formula.formule)):
+                for b in range(a+1,len(formula.formule)):
+                    if simplify(formula.formule[a]) == simplify(Not(formula.formule[b])):
+                        return Fls()
+
+
+        if formula.__class__.__name__ == 'Or':
+            for b in formula.formule:
+                if b == "Tru":
+                    return Tru()
+            for b in range(len(formula.formule)):
+                if formula.formule[b] == Fls():
+                    formula.formule.pop(b)
+            for a in range(len(formula.formule)):
+                for b in range(a+1,len(formula.formule)):
+                    if simplify(formula.formule[a]) == simplify(Not(formula.formule[b])):
+                        return Tru()
+
         temp = []
         for p in formula.formule:
             if p not in temp:
                 temp.append(p)
         new = temp
         formula.formule = new
-        return formula
+        if len(formula.formule) == 1:
+            return V(formula.formule[0])
+        else:
+            return formula
     else:
         return formula
 
