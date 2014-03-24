@@ -1,7 +1,6 @@
 __author__ = 'jaka'
 #coding:utf-8
 
-
 class Fls:
     def __init__(self):
         pass
@@ -39,7 +38,7 @@ class V:
         self.ime = ime
 
     def __repr__(self):
-        return self.ime
+        return str(self.ime)
 
     def vrednost(self, v):
         return v[self.ime]
@@ -87,6 +86,7 @@ class Or:
 
     def __repr__(self):
         return "(%s)" % (" ∨ ".join(str(f) for f in self.formule))
+
 
     def vrednost(self, v):
         b = False
