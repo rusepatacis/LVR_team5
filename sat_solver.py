@@ -158,22 +158,37 @@ def simplify(formula, verbose=False):
             for b in formula.formule:
                 if b == "Fls":
                     return Fls()
-            for b in range(len(formula.formule)):
-                if formula.formule[b] == Tru():
-                    formula.formule.pop(b)
+            tmp = []
+            for b in formula.formule:
+                if b == Tru():
+                    pass
+                else:
+                    tmp.append(b)
+            if len(tmp) == 1:
+                return tmp[0]
+            else:
+                formula.formule = tmp
+            formula.formule = tmp
             for a in range(len(formula.formule)):
                 for b in range(a+1,len(formula.formule)):
                     if simplify(formula.formule[a]) == simplify(Not(formula.formule[b])):
                         return Fls()
 
-
         if formula.__class__.__name__ == 'Or':
             for b in formula.formule:
                 if b == "Tru":
                     return Tru()
-            for b in range(len(formula.formule)):
-                if formula.formule[b] == Fls():
-                    formula.formule.pop(b)
+            tmp = []
+            for b in formula.formule:
+                if b == Fls():
+                    pass
+                else:
+                    tmp.append(b)
+            if len(tmp) == 1:
+                return tmp[0]
+            else:
+                formula.formule = tmp
+            formula.formule = tmp
             for a in range(len(formula.formule)):
                 for b in range(a+1,len(formula.formule)):
                     if simplify(formula.formule[a]) == simplify(Not(formula.formule[b])):

@@ -24,8 +24,10 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(simplify(Not(Tru())), Fls())
         self.assertEqual(simplify(Not(Fls())), Tru())
 
-        #self.assertEqual(simplify(And([V("X"),Tru()])),V("X"))
-        #self.assertEqual(simplify(Or([V("X"),Fls()])),V("X"))
+        self.assertEqual(simplify(And([V("X"),Tru()])),V("X"))
+        self.assertEqual(simplify(And([V("X"),Tru(),V("Y")])),And([V("X"),V("Y")]))
+        self.assertEqual(simplify(Or([V("X"),Fls()])),V("X"))
+        self.assertEqual(simplify(Or([V("X"),Fls(),V("Y")])),Or([V("X"),V("Y")]))
 
         self.assertEqual(simplify(Not(Not("X"))), V("X"))
         self.assertEqual(simplify(Not(Not(Not(Not("X"))))), V("X"))
@@ -52,6 +54,27 @@ class MyTestCase(unittest.TestCase):
 
         #self.assertEqual(simplify(And([Or([Not("P"),V("Q")], V("P"))])), And([V("Q",V("P"))]))
         print "Test medium finished."
+
+    def test_jaka_found_bug1(self):
+        t1 = Not(Or([And([Or([V("p"), V("q")]),Or([V("p"), V("r")])]),And([Not(V("a")), V("b"), V('c')])]))
+        t2 = And([And([Tru(),V("q"),V("p"),V("r"),Not(V("a")),V("b")]),Or([V("c"),V("x"),V("w")])])
+        t3 = And([Or([Tru(),V("q"),V("p"),V("r"),Not(V("a")),V("b")]),Or([V("c"),V("x"),V("w")]),
+                  Or([V("a"),V("b"),And([Or([V("c"), V('a'), V('x')]),V('z'),V('w')])])])
+        t4 = Or([Or([And([V('A'), V('B')]), And([V('C'), V('D')])]),V('E')])
+
+        simplify(t1)
+        simplify(t2)
+        simplify(t3)
+        simplify(t4)
+
+        pr = []
+        pr.append(t1)
+        pr.append(t2)
+        pr.append(t3)
+        pr.append(t4)
+        simplify(pr)
+
+        print "Test jaka_bug1 finished."
 
 
 if __name__ == '__main__':
