@@ -207,6 +207,79 @@ def simplify(formula, verbose=False):
     else:
         return formula
 
+def simplify_or_same(formula):
+    same = True
+    for form in formula.formule:
+        if form.__class__.__name__ != 'V':
+            same = False
+            break
+
+    if same:
+        simp = []
+        for form in formula.formule:
+            if form not in simp:
+                simp.append(form)
+
+        formula.formule = simp
+        return formula
+
+    if formula.__class__.__name__ == 'Or':
+        onlyOr = True
+        for form in formula.formule:
+            if form.__class__.__name__ not in ('Or', 'V'):
+                onlyOr = False
+                break
+
+        temp = []
+        if onlyOr:
+            for form in formula.formule:
+                tmpFormula = simplify_or_same(form)
+
+                for form2 in tmpFormula.formule:
+                    if form2 not in temp:
+                        temp.append(form2)
+
+            formula.formule = temp
+        return formula
+
+def simplify_and_same(formula):
+    same = True
+    for form in formula.formule:
+        if form.__class__.__name__ != 'V':
+            same = False
+            break
+
+    if same:
+        simp = []
+        for form in formula.formule:
+            if form not in simp:
+                simp.append(form)
+
+        formula.formule = simp
+        return formula
+
+    if formula.__class__.__name__ == 'And':
+        onlyOr = True
+        for form in formula.formule:
+            if form.__class__.__name__ not in ('And', 'V'):
+                onlyOr = False
+                break
+
+        temp = []
+        if onlyOr:
+            for form in formula.formule:
+                tmpFormula = simplify_and_same(form)
+
+                for form2 in tmpFormula.formule:
+                    if form2 not in temp:
+                        temp.append(form2)
+
+            formula.formule = temp
+        return formula
+
+
+
+
 """
     Vaje 2 - prevedbe problemov
 """

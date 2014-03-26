@@ -50,10 +50,31 @@ class MyTestCase(unittest.TestCase):
         print "Test simplify finished."
 
     def test_medium(self):
+        #self.assertEqual(simplify(And([And([V("p"),V("q")]), And([V("q"),V("r")]),
+        #                               And([V("r"),V("p")])])), And([V("p"),V("q"),V("r")]))#(p∧q)∧(q∧r)∧(r∧p)
+        #self.assertEqual(simplify(Or([V("X"), And([V("Y"),V("X")])])),V("X")) #p∨(q∧p)
         #self.assertEqual(simplify(Or([And([V("X"), Tru()]), Fls()])), V("X")) #(X in Tru) v Fls => X
 
         #self.assertEqual(simplify(And([Or([Not("P"),V("Q")], V("P"))])), And([V("Q",V("P"))]))
         print "Test medium finished."
+
+    def test_simplify_same(self):
+        formula1 = Or([ Or([V("X"),V("Y")]), Or([V("Y"),V("Z")])])
+        formula2 = Or([Or([ Or([V("X"),V("Y")]), Or([V("Y"),V("Z")])]),Or([ Or([V("X"),V("Y")]), Or([V("Y"),V("Z")])])])
+        formula3 = (Or([Or([V("p"),V("q")]), Or([V("q"),V("r")]),Or([V("r"),V("p")])]))#(p∧q)∧(q∧r)∧(r∧p)
+
+        self.assertEqual((simplify_or_same(formula1)),Or([V("X"),V("Y"),V("Z")]))
+        self.assertEqual((simplify_or_same(formula2)),Or([V("X"),V("Y"),V("Z")]))
+        self.assertEqual((simplify_or_same(formula3)), Or([V("p"),V("q"),V("r")]))
+
+        formula1 = And([ And([V("X"),V("Y")]), And([V("Y"),V("Z")])])
+        formula2 = And([And([ And([V("X"),V("Y")]), And([V("Y"),V("Z")])]),And([ And([V("X"),V("Y")]), And([V("Y"),V("Z")])])])
+        formula3 = (And([And([V("p"),V("q")]), And([V("q"),V("r")]),And([V("r"),V("p")])]))#(p∧q)∧(q∧r)∧(r∧p)
+
+        self.assertEqual((simplify_and_same(formula1)),And([V("X"),V("Y"),V("Z")]))
+        self.assertEqual((simplify_and_same(formula2)),And([V("X"),V("Y"),V("Z")]))
+        self.assertEqual((simplify_and_same(formula3)), And([V("p"),V("q"),V("r")]))
+        print "Test simplify_same finished."
 
     def test_jaka_found_bug1(self):
         t1 = Not(Or([And([Or([V("p"), V("q")]),Or([V("p"), V("r")])]),And([Not(V("a")), V("b"), V('c')])]))
