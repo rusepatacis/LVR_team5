@@ -202,6 +202,9 @@ def simplify(formula, verbose=False):
 
         temp = []
         for p in formula.formule:
+            p = simplify_and_same(p)
+            p = simplify_or_same(p)
+
             if p not in temp:
                 temp.append(p)
         new = temp
@@ -214,7 +217,7 @@ def simplify(formula, verbose=False):
         return formula
 
 def simplify_or_same(formula):
-    if formula.__class__.__name__ == 'V':
+    if formula.__class__.__name__ in ('V','Not'):
         return formula
 
     same = True
@@ -256,7 +259,7 @@ def simplify_or_same(formula):
     return formula
 
 def simplify_and_same(formula):
-    if formula.__class__.__name__ == 'V':
+    if formula.__class__.__name__ in ('V','Not'):
         return formula
 
     same = True

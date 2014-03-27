@@ -76,10 +76,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual((simplify_and_same(formula3)), And([V("p"),V("q"),V("r")]))
 
         formula4 = Or([(And([And([V("p"),V("q")]), And([V("q"),V("r")]),And([V("r"),V("p")])])),(And([And([V("p1"),V("q1")]), And([V("q1"),V("r1")]),And([V("r1"),V("p1")])]))])#(p∧q)∧(q∧r)∧(r∧p) or (p1∧q1)∧(q1∧r1)∧(r1∧p1)
-
-        print simplify_or_same(formula4)
-        print simplify_and_same(formula4)
-        print simplify(formula4)
+        self.assertEqual(simplify(formula4),Or([And([V('p'),V('q'),V('r')]), And([V('p1'),V('q1'),V('r1')])]))
 
         print "Test simplify_same finished."
 
