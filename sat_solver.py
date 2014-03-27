@@ -1,7 +1,6 @@
 __author__ = 'jaka'
 #coding:utf-8
 
-
 class Fls:
     def __init__(self):
         pass
@@ -39,7 +38,7 @@ class V:
         self.ime = ime
 
     def __repr__(self):
-        return self.ime
+        return str(self.ime)
 
     def vrednost(self, v):
         return v[self.ime]
@@ -87,6 +86,7 @@ class Or:
 
     def __repr__(self):
         return "(%s)" % (" ∨ ".join(str(f) for f in self.formule))
+
 
     def vrednost(self, v):
         b = False
@@ -413,3 +413,134 @@ def barvanje(G, b):
 
     # Prevedba je konjunkcija pogojev
     return And([vsaj_ena_barva, nobeno_dvakrat, povezani_nista_iste])
+
+
+
+"""
+Vaje 4,5 - DLSS
+"""
+
+"""
+Pretvorba v CNF obliko
+"""
+
+
+def only_literals(p):
+    """
+    Vrne True, če so v formuli p samo spremenljivke (in ne dodatni operatorji)
+    """
+    # Ločeno preverimo Not
+    if isinstance(p, Not):
+        return isinstance(p.formula, V)
+    # Sicer preverjamo posamezne člene
+    for trm in p.formule:
+        if not isinstance(trm, V) and not isinstance(trm, Not):
+            return False
+        # Preverimo tudi negirane člene
+        elif isinstance(trm, Not) and not isinstance(trm.formula, V):
+            return False
+    return True
+
+
+def is_CNF_clause(p):
+    """
+    Če imamo disjunkcijo, ki ima notri samo literale ali negirane literale, jo lahko porabimo za CNF
+    (konjukcija takih disjunkcij je CNF).
+    """
+    return isinstance(p, Or) and only_literals(p)
+
+
+def is_CNF_formula(p):
+    """
+    Vrne true če je formula p v CNF obliki
+    """
+    # Imeti moramo konjunkcijo...
+    if isinstance(p, And):
+        # ... samih disjunkctnih stavkov
+        for trm in p.formule:
+            if not (is_CNF_clause(trm)):
+                return False
+    else:
+        return False
+    return True
+
+
+def convert_to_CNF(p, verbose=False):
+    """
+    Pretvorba formule v CNF
+    """
+    def convert_nnf_to_CNF(cs, verbose=verbose, i=0):
+        print cs, isinstance(cs, V)
+        i += 1
+        if isinstance(cs, Tru):
+            if verbose:
+                print "Tru", cs
+            return splosci(cs)
+        if isinstance(cs, Fls):
+            print "FALSH"
+            if verbose:
+                print "Fls", cs
+            return And([Or([])])
+        if isinstance(cs, V):
+            if verbose:
+                print "Variabla", cs
+            return splosci(Or([cs]))
+        if isinstance(cs, Not):
+            if verbose:
+                print "Not", cs
+            return splosci(Or([cs]))
+        if isinstance(cs, And):
+            if verbose:
+                print "And", cs
+            return splosci(And([convert_nnf_to_CNF(term, i=i)
+                        for term in cs.formule]))
+        if isinstance(cs, Or):
+            if not cs.formule:
+                if verbose:
+                    print "Or 0", cs
+                return And([Or([])])
+            elif len(cs.formule) == 1:
+                if verbose:
+                    print "Or 1", cs
+                return splosci(convert_nnf_to_CNF(cs.formule[0], i=i))
+            else:
+                # Kompliciran or, potrebna distribucija
+                konj, ostalo = [], []
+                for f in cs.formule:
+                    if isinstance(f, And):
+                        konj.append(f)
+                    else:
+                        ostalo.append(f)
+                if not konj:
+                    return splosci(Or(ostalo))
+                else:
+                    return splosci(And([convert_nnf_to_CNF(Or(ostalo+[el]+konj[1:])) for el in konj[0].formule]))
+    return convert_nnf_to_CNF(splosci(simplify(p)))
+
+
+def splosci(f):
+    """
+    Splosci (flatten) dani izraz, kolikor je mozno.
+    """
+    a = simplify(f)
+    def splosci_aux(p):
+        if isinstance(p, And):
+            nove = []
+            for fr in p.formule:
+                if isinstance(fr, And):
+                    nove += [splosci_aux(x) for x in fr.formule]
+                else:
+                    nove.append(splosci_aux(fr))
+            p.formule = nove
+        elif isinstance(p, Or):
+            nove = []
+            for fr in p.formule:
+                if isinstance(fr, Or):
+                    nove += [splosci_aux(x) for x in fr.formule]
+                else:
+                    nove.append(splosci_aux(fr))
+            p.formule = nove
+        else:
+            return p
+        return p
+    return splosci_aux(a)
