@@ -194,6 +194,12 @@ def simplify(formula, verbose=False):
                     if simplify(formula.formule[a]) == simplify(Not(formula.formule[b])):
                         return Tru()
 
+        """if formula.__class__.__name__ == 'Or':
+            formula = simplify_or_same(formula)
+        elif formula.__class__.__name__ == 'And':
+            formula = simplify_and_same(formula)
+        """
+
         temp = []
         for p in formula.formule:
             if p not in temp:
@@ -208,6 +214,9 @@ def simplify(formula, verbose=False):
         return formula
 
 def simplify_or_same(formula):
+    if formula.__class__.__name__ == 'V':
+        return formula
+
     same = True
     for form in formula.formule:
         if form.__class__.__name__ != 'V':
@@ -235,14 +244,21 @@ def simplify_or_same(formula):
             for form in formula.formule:
                 tmpFormula = simplify_or_same(form)
 
+                if tmpFormula.__class__.__name__ == 'V':
+                    temp.append(tmpFormula)
+                    continue
                 for form2 in tmpFormula.formule:
                     if form2 not in temp:
                         temp.append(form2)
 
             formula.formule = temp
         return formula
+    return formula
 
 def simplify_and_same(formula):
+    if formula.__class__.__name__ == 'V':
+        return formula
+
     same = True
     for form in formula.formule:
         if form.__class__.__name__ != 'V':
@@ -276,6 +292,7 @@ def simplify_and_same(formula):
 
             formula.formule = temp
         return formula
+    return formula
 
 
 
