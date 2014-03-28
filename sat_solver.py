@@ -1,6 +1,7 @@
 __author__ = 'jaka'
 #coding:utf-8
 
+
 class Fls:
     def __init__(self):
         pass
@@ -41,10 +42,13 @@ class V:
         return str(self.ime)
 
     def vrednost(self, v):
-        return v[self.ime]
+        return v[self.ime].vrednost(v)
 
     def __eq__(self, other):
         return str(self) == str(other)
+
+    def __hash__(self):
+        return hash(repr(self))
 
 
 class Not:
@@ -59,6 +63,9 @@ class Not:
 
     def __eq__(self, other):
         return str(self) == str(other)
+
+    def __hash__(self):
+        return hash(repr(self))
 
 
 class And:
@@ -134,10 +141,10 @@ class XOR():
 
 def simplify(formula, verbose=False):
     if verbose:
-        print formula
+        print "\t\t", formula, formula.__class__
     if formula.__class__.__name__ in ('V', 'Fls', 'Tru'):
         if verbose:
-            print "Tukaj sem"
+            print "Tukaj sem", formula
         return formula
     elif formula.__class__.__name__ == 'Not':
         if formula.formula.__class__.__name__ == 'And':
@@ -210,7 +217,7 @@ def simplify(formula, verbose=False):
         new = temp
         formula.formule = new
         if len(formula.formule) == 1:
-            return V(formula.formule[0])
+            return formula.formule[0]
         else:
             return formula
     else:
@@ -469,15 +476,12 @@ def convert_to_CNF(p, verbose=False):
     """
     Pretvorba formule v CNF
     """
-    def convert_nnf_to_CNF(cs, verbose=verbose, i=0):
-        print cs, isinstance(cs, V)
-        i += 1
+    def convert_nnf_to_CNF(cs, verbose=False):
         if isinstance(cs, Tru):
             if verbose:
                 print "Tru", cs
             return splosci(cs)
         if isinstance(cs, Fls):
-            print "FALSH"
             if verbose:
                 print "Fls", cs
             return And([Or([])])
@@ -492,7 +496,7 @@ def convert_to_CNF(p, verbose=False):
         if isinstance(cs, And):
             if verbose:
                 print "And", cs
-            return splosci(And([convert_nnf_to_CNF(term, i=i)
+            return splosci(And([convert_nnf_to_CNF(term, verbose)
                         for term in cs.formule]))
         if isinstance(cs, Or):
             if not cs.formule:
@@ -502,8 +506,10 @@ def convert_to_CNF(p, verbose=False):
             elif len(cs.formule) == 1:
                 if verbose:
                     print "Or 1", cs
-                return splosci(convert_nnf_to_CNF(cs.formule[0], i=i))
+                return splosci(convert_nnf_to_CNF(cs.formule[0]), verbose)
             else:
+                if verbose:
+                    print "Or > 2", cs
                 # Kompliciran or, potrebna distribucija
                 konj, ostalo = [], []
                 for f in cs.formule:
@@ -514,8 +520,16 @@ def convert_to_CNF(p, verbose=False):
                 if not konj:
                     return splosci(Or(ostalo))
                 else:
-                    return splosci(And([convert_nnf_to_CNF(Or(ostalo+[el]+konj[1:])) for el in konj[0].formule]))
-    return convert_nnf_to_CNF(splosci(simplify(p)))
+                    return splosci(And([convert_nnf_to_CNF(Or(ostalo+[el]+konj[1:]), verbose) for el in konj[0].formule]))
+    tmp_cnf = convert_nnf_to_CNF(splosci(simplify(p)), verbose=verbose)
+    # Polovimo proste literatle
+    new_formule = []
+    for f in tmp_cnf.formule:
+        if isinstance(f, V) or isinstance(f, Not):
+            new_formule.append(Or([f]))
+        else:
+            new_formule.append(f)
+    return And(new_formule)
 
 
 def splosci(f):
@@ -544,3 +558,137 @@ def splosci(f):
             return p
         return p
     return splosci_aux(a)
+
+
+def dpll(f, verbose=False):
+    """
+    DPLL algorithm
+
+    formula.vrednost(dpll(formula)) will return True (if the problem is solvable)
+    """
+    if verbose:
+        print "Formula", f
+
+    # Primer prazne formule
+    if not f:
+        return False
+
+    # Pretvori v CNF
+    cnf_f = convert_to_CNF(f)
+    if verbose:
+        print "CNF____", cnf_f
+
+    # Primer prazne formule
+    if not cnf_f.formule:
+        return False
+
+    # Slovar spremenljivk, katerih vrednosti poznamo
+    v = {}
+
+    # Seznam stavkov, ki jih se moramo obdelati
+    cs = cnf_f.formule
+    if verbose:
+        print "CS_____", cs
+        print "CSitemC", len(cs)
+
+
+    def dpll_aux(v, cs, verbose=False):
+
+        # Slovar spremenljivk, katerih vrednosti še ne poznamo
+        neznane_vrednosti = set(v for stavek in cs for v in stavek.formule)
+        if verbose:
+            print "Nezanane vrednosti", sorted(list(neznane_vrednosti))
+
+        # Gremo cez stavke in obravnavmo primere
+        ocisceni_cs=[]
+        for i, stavek in enumerate(cs):
+            # Naletimo na prazen stavek --> false (ni resitve)
+            if not stavek.formule:
+                return False
+            # Naletimo na seznam z enim elemetom [xi] (spremenljivka ali negacija)
+            # znamo nastaviti xi
+            if len(stavek.formule) == 1:
+                lit = stavek.formule[0]
+                if isinstance(lit, V) or isinstance(lit, Not):
+                    v[lit] = Tru()
+                else:
+                    raise TypeError
+                # Take stavke odstranimo
+            else:
+                ocisceni_cs.append(stavek)
+
+        # Dobimo posodobljen v in skrcen seznam cs
+        cs = ocisceni_cs
+
+        if verbose:
+            print "Updated v", v
+            print "Updated CS", cs
+
+        # Poenostavimo cs tako, da upostevamo razsirjeni v
+        upostevamo_v_cs = []
+        for stavek in cs:
+            nov_stavek = []
+            true_spremenljivka = False
+            for variable in stavek.formule:
+                if variable in v:
+                    if v[variable] == Tru():
+                        true_spremenljivka = True
+                        break
+                    # Literale, ki so Fls izpustimo iz novega izraza
+                else:
+                    nov_stavek.append(variable)
+
+            if not true_spremenljivka:
+                # Ce nismo naleteli na Tru, dodamo izraz oziroma njegov del
+                upostevamo_v_cs.append(Or(nov_stavek))
+
+        cs = upostevamo_v_cs
+        if verbose:
+            print "CS upostevsi v", cs
+
+        # ce cs sedaj prazen -> odgovor je v
+        if not cs:
+            return v
+
+
+        # cs sedaj ni prazen
+        # se vedno imamo stavke za obdelavo, a trenutno nimamo dodatnega znanja
+        # zato izberemo xi in preizkusimo xi = Fls in xi = Tru
+        if not neznane_vrednosti:
+            return False
+        else:
+            xi = neznane_vrednosti.pop()
+            v[xi] = Tru()
+            v1 = dpll_aux(v, cs, verbose)
+            if not v1:
+                v[xi] = Fls()
+                return dpll_aux(v, cs, verbose)
+            else:
+                return v1
+
+
+    v = dpll_aux(v, cs, verbose)
+    if v:
+        # Imamo resitev
+        # Nezanke, ki v resitvi niso omenjene, nastavimo na Fls
+        for var in set(v for stavek in cs for v in stavek.formule):
+            if var not in v:
+                v[var] = Fls()
+
+        # Pocistimo negacije, pretvorimo v slovar stringov (ki so imena spremenljivk).
+        v_final = {}
+        for var in v:
+            if isinstance(var, V):
+                v_final[var.ime] = v[var]
+            elif isinstance(var, Not):
+                if v[var] == Fls():
+                    v_final[var.formula.ime] = Tru()
+                elif v[var] == Tru():
+                    v_final[var.formula.ime] = Fls()
+                else:
+                    raise ValueError
+            else:
+                raise TypeError
+        return v_final
+    else:
+        return False
