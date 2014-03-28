@@ -101,6 +101,9 @@ class MyTestCase(unittest.TestCase):
 
         print "Test jaka_bug1 finished."
 
+    def test_hadamardova_matrika(self):
+        hadamardova_matrika(2)
+
 
 if __name__ == '__main__':
     unittest.main()
