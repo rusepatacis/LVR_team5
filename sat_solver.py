@@ -106,37 +106,41 @@ class Or:
         return str(self) == str(other)
 
 
-class Imp:
-    def __init__(self, formule):
-        self.formule = formule
+class Imp(Or):
+    """
+    Implcation
+    """
+    def __init__(self, p, q):
+        self.p = p
+        self.q = q
+        Or.__init__(self, [Not(p), q])
 
     def __repr__(self):
-        return  "(%s)" % (" ⇒ ".join(str(f) for f in self.formule))
-
-    def vrednost(self, v):
-        # p ---> q = NOTp or q
-        b = self.formule[0].vrednost(v)
-        for p in self.formule[1:]:
-            b = (not b) or p.vrednost(v)
-        return b
-
-    def __eq__(self, other):
-        return str(self) == str(other)
+        return str(self.p) + " ⇒ " + str(self.q)
 
 
-class XOR():
-    def __init__(self, formule):
-        self.formule = formule
+class Equiv(And):
+    """
+    Logical equivalence
+    """
+    def __init__(self, p, q):
+        self.p = p
+        self.q = q
+        And.__init__(self, [Or([Not(p), q]), Or([p, Not(q)])])
 
     def __repr__(self):
-        return "(%s)" % (" XOR ".join(str(f) for f in self.formule))
+        return str(self.p) + " ⇔ " + str(self.q)
 
-    def vrednost(self, v):
-        p, q = self.formule[0], self.formule[1]
-        return And([
-            Or([p, q]),
-            Not(And([p, q]))
-        ]).vrednost(v)
+
+class XOR(And):
+
+    def __init__(self, p, q):
+        self.p = p
+        self.q = q
+        And.__init__(self, [Or([Not(p), Not(q)]), Or([p, q])])
+
+    def __repr__(self):
+        return str(self.p) + " ⊕ " + str(self.q)
 
 
 def simplify(formula, verbose=False):
