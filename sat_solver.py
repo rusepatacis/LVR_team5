@@ -390,14 +390,13 @@ def hadamardova_matrika(n):
             matrika[(i,j)] = V("a"+str(i)+","+str(j))
 
     formula = []
-    print matrika
 
-    for i in range(1,n,2):#stolpci
+    for i in range(1,n-1):#stolpci
         temp = []
         for j in range(1,n):#vrstice
-            for k in range(j,n):#vrstice
-                t1 = Not(XOR([matrika[(i, j)], matrika[(i+1, j)]]))
-                t2 = Not(XOR([matrika[(i, k)], matrika[(i+1, k)]]))
+            for k in range(j+1,n):#vrstice
+                t1 = Not(XOR([matrika[(j, i)], matrika[(j, i+1)]]))
+                t2 = Not(XOR([matrika[(k, i)], matrika[(k, i+1)]]))
                 temp.append(XOR([t1,t2]))
 
         while len(temp) > 2:
@@ -406,12 +405,17 @@ def hadamardova_matrika(n):
                 temp2.append(XOR([temp[i1],temp[i1+1]]))
             temp = temp2
 
-        f = And([temp[0],temp[1]])
+        if len(temp) == 1:
+            f = temp[0]
+        else:
+            f = And([temp[0],temp[1]])
+
         formula.append(f)
 
-    formulaK = And(formula)
-    print formulaK
-    return formulaK
+    if len(formula) == 1:
+        return formula[0]
+
+    return And(formula)
 
 
 
