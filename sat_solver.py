@@ -392,6 +392,44 @@ def X2SATsudoku(vhod):
     Vaje 3 - prevedbe problemov
 """
 
+def hadamardova_matrika(n):
+    n = n+1 #ker stejemo indekse matrike od 1 naprej
+    matrika = {}
+
+    for i in range(1,n):
+        for j in range(1,n):
+            matrika[(i,j)] = V("a"+str(i)+","+str(j))
+
+    formula = []
+
+    for i in range(1,n-1):#stolpci
+        temp = []
+        for j in range(1,n):#vrstice
+            for k in range(j+1,n):#vrstice
+                t1 = Not(XOR([matrika[(j, i)], matrika[(j, i+1)]]))
+                t2 = Not(XOR([matrika[(k, i)], matrika[(k, i+1)]]))
+                temp.append(XOR([t1,t2]))
+
+        while len(temp) > 2:
+            temp2 = []
+            for i1 in range(len(temp)-1):
+                temp2.append(XOR([temp[i1],temp[i1+1]]))
+            temp = temp2
+
+        if len(temp) == 1:
+            f = temp[0]
+        else:
+            f = And([temp[0],temp[1]])
+
+        formula.append(f)
+
+    if len(formula) == 1:
+        return formula[0]
+
+    return And(formula)
+
+
+
 
 def barvanje(G, b):
     """
