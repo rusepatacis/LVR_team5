@@ -603,6 +603,10 @@ def dpll(f, verbose=False):
         if verbose:
             print "Nezanane vrednosti", sorted(list(neznane_vrednosti))
 
+
+        # Optimiziramo z sortiranjem seznama stavkov po velikosti (krajse stavke obdelamo prej)
+        cs = sorted(cs, key=lambda x: len(x.formule))
+
         # Gremo cez stavke in obravnavmo primere
         ocisceni_cs=[]
         for i, stavek in enumerate(cs):
