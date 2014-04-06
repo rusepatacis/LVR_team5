@@ -1,7 +1,7 @@
 __author__ = 'Jani'
 #coding: UTF-8
-import unittest
 
+import unittest
 from sat_solver import *
 
 
@@ -81,6 +81,8 @@ class MyTestCase(unittest.TestCase):
         print "Test simplify_same finished."
 
     def test_jaka_found_bug1(self):
+        stopwatch = Stopwatch()
+
         t1 = Not(Or([And([Or([V("p"), V("q")]),Or([V("p"), V("r")])]),And([Not(V("a")), V("b"), V('c')])]))
         t2 = And([And([Tru(),V("q"),V("p"),V("r"),Not(V("a")),V("b")]),Or([V("c"),V("x"),V("w")])])
         t3 = And([Or([Tru(),V("q"),V("p"),V("r"),Not(V("a")),V("b")]),Or([V("c"),V("x"),V("w")]),
@@ -88,9 +90,12 @@ class MyTestCase(unittest.TestCase):
         t4 = Or([Or([And([V('A'), V('B')]), And([V('C'), V('D')])]),V('E')])
 
         simplify(t1)
+        stopwatch.intermediate()
         simplify(t2)
         simplify(t3)
+        stopwatch.intermediate()
         simplify(t4)
+        stopwatch.intermediate()
 
         pr = []
         pr.append(t1)
@@ -98,11 +103,14 @@ class MyTestCase(unittest.TestCase):
         pr.append(t3)
         pr.append(t4)
         simplify(pr)
+        stopwatch.stop()
+        print stopwatch
 
         print "Test jaka_bug1 finished."
 
     def test_hadamardova_matrika(self):
-        r = XOR([Not(XOR([V("a1,1"), V("a1,2")])), Not(XOR([V("a2,1"),V("a2,2")]))])
+        r = XOR([Not(XOR([V("a1,1"), V("a1,2")])), Not(XOR([V("a2,1"), V("a2,2")]))])
+
         print r
         print hadamardova_matrika(2)#TODO tuki je neki cudnega, enako je ampak ce primerjas ni enako?
         #self.assertEqual(hadamardova_matrika(2), r) weird
@@ -114,6 +122,7 @@ class MyTestCase(unittest.TestCase):
         #hadamardova_matrika(24) # 3.3s
         #hadamardova_matrika(26)  # 5s
         #hadamardova_matrika(30)   #10s
+
 
         print "Test hadamardova_matrika finished."
 

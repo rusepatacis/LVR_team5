@@ -1,6 +1,8 @@
 __author__ = 'jaka'
 #coding:utf-8
 
+from lvr_vaje1 import And
+from time import time
 
 class Fls:
     def __init__(self):
@@ -141,6 +143,76 @@ class XOR(And):
 
     def __repr__(self):
         return str(self.p) + " ⊕ " + str(self.q)
+
+
+class Stopwatch():
+    def __init__(self):
+        self.timestamps = [time()]
+        self.tags = ["Start"]
+
+    def intermediate(self,tag=""):
+        if len(self.timestamps) == 0:
+            print "Error. Stopwatch not running. Starting it now."
+            self.timestamps.append(time())
+
+            if len(tag) == 0:
+                self.tags = ["Start"]
+            else:
+                self.tags = [tag]
+        else:
+            self.timestamps.append(time())
+            if len(tag) == 0:
+                self.tags.append("Inter" + str(len(self.timestamps)-1))
+            else:
+                self.tags.append(tag)
+
+    def start(self,tag=""):
+        if len(self.timestamps > 1):
+            print "Error. Stopwatch already running."
+        else:
+            self.timestamps.append(time())
+            if len(tag) == 0:
+                self.tags.append("Inter" + str(len(self.timestamps)-1))
+            else:
+                self.tags.append(tag)
+
+    def restart(self,tag=""):
+        self.timestamps = [time()]
+        if len(tag) == 0:
+            self.tags = ["Start"]
+        else:
+            self.tags = [tag]
+
+    def clear(self):
+        self.timestamps = []
+        self.tags = []
+
+    def stop(self,tag=""):
+        self.timestamps.append(time())
+        if len(tag) == 0:
+            self.tags.append("Inter" + str(len(self.timestamps)-1))
+        else:
+            self.tags.append(tag)
+
+    def __repr__(self):
+        x = "Time: "
+        y = "      "
+        if len(self.timestamps) > 0:
+            for t in range(0,len(self.timestamps)-2):
+                #x += str(self.timestamps[t+1] - self.timestamps[t])+" "
+
+                tmp = '%.3f ' % (self.timestamps[t+1] - self.timestamps[t])
+                x += tmp+" "*(abs(8-len(tmp)))
+                y += self.tags[t+1] + " "*abs(8-len(self.tags[t+1]))
+
+            x += "\n"
+            x += "Total: %.3f" % (self.timestamps[len(self.timestamps)-1] - self.timestamps[0]) + " s"
+        else:
+            x += "Stopwatch not started."
+        y += "\n"
+        return y+x
+
+
 
 
 def simplify(formula, verbose=False):
