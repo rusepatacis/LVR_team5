@@ -59,7 +59,7 @@ class Not:
         self.formula = p
 
     def __repr__(self):
-        return "¬" + str(self.formula)
+        return "[NOT](" + str(self.formula)+')'
 
     def vrednost(self, v):
         return not(self.formula.vrednost(v))
@@ -76,7 +76,7 @@ class And:
         self.formule = ps
 
     def __repr__(self):
-        return "(%s)" % (" ∧ ".join(str(f) for f in self.formule))
+        return "(%s)" % (" [AND] ".join(str(f) for f in self.formule))
 
 
     def vrednost(self, v):
@@ -95,7 +95,7 @@ class Or:
         self.formule = ps
 
     def __repr__(self):
-        return "(%s)" % (" ∨ ".join(str(f) for f in self.formule))
+        return "(%s)" % (" [OR] ".join(str(f) for f in self.formule))
 
 
     def vrednost(self, v):
@@ -119,7 +119,7 @@ class Imp(Or):
         Or.__init__(self, [Not(p), q])
 
     def __repr__(self):
-        return str(self.p) + " ⇒ " + str(self.q)
+        return str(self.p) + " [=>] " + str(self.q)
 
 
 class Equiv(And):
@@ -132,7 +132,7 @@ class Equiv(And):
         And.__init__(self, [Or([Not(p), q]), Or([p, Not(q)])])
 
     def __repr__(self):
-        return str(self.p) + " ⇔ " + str(self.q)
+        return str(self.p) + " [<=>] " + str(self.q)
 
 
 class XOR(And):
@@ -143,7 +143,7 @@ class XOR(And):
         And.__init__(self, [Or([Not(p), Not(q)]), Or([p, q])])
 
     def __repr__(self):
-        return str(self.p) + " ⊕ " + str(self.q)
+        return str(self.p) + " [XOR] " + str(self.q)
 
 
 class Stopwatch():
