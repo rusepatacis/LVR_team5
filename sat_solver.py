@@ -1,5 +1,6 @@
 __author__ = 'jaka'
-#coding:utf-8
+#coding: UTF-8
+
 
 from lvr_vaje1 import And
 from time import time
@@ -485,14 +486,14 @@ def hadamardova_matrika(n):
         temp = []
         for j in range(1,n):#vrstice
             for k in range(j+1,n):#vrstice
-                t1 = Not(XOR([matrika[(j, i)], matrika[(j, i+1)]]))
-                t2 = Not(XOR([matrika[(k, i)], matrika[(k, i+1)]]))
-                temp.append(XOR([t1,t2]))
+                t1 = Not(XOR(matrika[(j, i)], matrika[(j, i+1)]))
+                t2 = Not(XOR(matrika[(k, i)], matrika[(k, i+1)]))
+                temp.append(XOR(t1,t2))
 
         while len(temp) > 2:
             temp2 = []
             for i1 in range(len(temp)-1):
-                temp2.append(XOR([temp[i1],temp[i1+1]]))
+                temp2.append(XOR(temp[i1],temp[i1+1]))
             temp = temp2
 
         if len(temp) == 1:

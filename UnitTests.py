@@ -10,17 +10,22 @@ class MyTestCase(unittest.TestCase):
     Neumni osnovni testi, ki ne stestirajo prav dosti.
     """
     def test_basic_operations(self):
+        st = Stopwatch("Basic test")
         self.assertEqual(Tru(), "Tru")
         self.assertEqual(Fls(), "Fls")
         self.assertEqual(V("X"), "X")
         self.assertEqual(Not("X"),"¬X")
         self.assertEqual(And([V("X"), V("Y")]), "(X ∧ Y)")
         self.assertEqual(Or([V("X"), V("Y")]),"(X ∨ Y)")
-        self.assertEqual(Imp([V("X"),V("Y")]),"(X ⇒ Y)")
-
-        print "Test basic finished."
+        xx = "(X ⇒ Y)"
+        print xx,xx == Imp(V("X"),V("Y"))
+        self.assertEqual(Imp(V("X"),V("Y")),xx)#TODO to neki cudno izpise z asci kodo
+        st.stop()
+        print st
 
     def test_simplify(self):
+        st = Stopwatch("Simplify")
+
         self.assertEqual(simplify(Not(Tru())), Fls())
         self.assertEqual(simplify(Not(Fls())), Tru())
 
@@ -47,18 +52,23 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(simplify(And([V("X"),Not("X")])),Fls())
         self.assertEqual(simplify(And([Not("X"),V("Y"), V("X")])), Fls())
 
-        print "Test simplify finished."
+        st.stop()
+        print st
 
     def test_medium(self):
+        st = Stopwatch("Medium")
         formula3 = (Or([Or([V("p"),V("q")]), Or([V("q"),V("r")]),Or([V("r"),V("p")])]))#(p∧q)∧(q∧r)∧(r∧p)
         #self.assertEqual((simplify_or_same(formula3)), Or([V("p"),V("q"),V("r")]))
 
         formula3 = (And([And([V("p"),V("q")]), And([V("q"),V("r")]),And([V("r"),V("p")])]))#(p∧q)∧(q∧r)∧(r∧p)
         #self.assertEqual((simplify_and_same(formula3)), And([V("p"),V("q"),V("r")]))
 
-        print "Test medium finished."
+        st.stop()
+        print st
 
     def test_simplify_same(self):
+        st = Stopwatch("Simplify same")
+
         formula1 = Or([ Or([V("X"),V("Y")]), Or([V("Y"),V("Z")])])
         formula2 = Or([Or([ Or([V("X"),V("Y")]), Or([V("Y"),V("Z")])]),Or([ Or([V("X"),V("Y")]), Or([V("Y"),V("Z")])])])
         formula3 = (Or([Or([V("p"),V("q")]), Or([V("q"),V("r")]),Or([V("r"),V("p")])]))#(p∧q)∧(q∧r)∧(r∧p)
@@ -78,7 +88,8 @@ class MyTestCase(unittest.TestCase):
         formula4 = Or([(And([And([V("p"),V("q")]), And([V("q"),V("r")]),And([V("r"),V("p")])])),(And([And([V("p1"),V("q1")]), And([V("q1"),V("r1")]),And([V("r1"),V("p1")])]))])#(p∧q)∧(q∧r)∧(r∧p) or (p1∧q1)∧(q1∧r1)∧(r1∧p1)
         self.assertEqual(simplify(formula4),Or([And([V('p'),V('q'),V('r')]), And([V('p1'),V('q1'),V('r1')])]))
 
-        print "Test simplify_same finished."
+        st.stop()
+        print st
 
     def test_jaka_found_bug1(self):
         stopwatch = Stopwatch("Jaka bug1")
@@ -90,7 +101,6 @@ class MyTestCase(unittest.TestCase):
         t4 = Or([Or([And([V('A'), V('B')]), And([V('C'), V('D')])]),V('E')])
 
         simplify(t1)
-        stopwatch.intermediate("gieuigheuihreiugeh")
         simplify(t2)
         simplify(t3)
         stopwatch.intermediate()
@@ -106,10 +116,10 @@ class MyTestCase(unittest.TestCase):
         stopwatch.stop()
         print stopwatch
 
-        print "Test jaka_bug1 finished."
-
     def test_hadamardova_matrika(self):
-        r = XOR([Not(XOR([V("a1,1"), V("a1,2")])), Not(XOR([V("a2,1"), V("a2,2")]))])
+        st = Stopwatch("Hadamardova")
+
+        r = XOR(Not(XOR(V("a1,1"), V("a1,2"))), Not(XOR(V("a2,1"), V("a2,2"))))
 
         print r
         print hadamardova_matrika(2)#TODO tuki je neki cudnega, enako je ampak ce primerjas ni enako?
@@ -124,7 +134,8 @@ class MyTestCase(unittest.TestCase):
         #hadamardova_matrika(30)   #10s
 
 
-        print "Test hadamardova_matrika finished."
+        st.stop()
+        print st
 
 
 
