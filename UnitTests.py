@@ -81,7 +81,7 @@ class MyTestCase(unittest.TestCase):
         print "Test simplify_same finished."
 
     def test_jaka_found_bug1(self):
-        stopwatch = Stopwatch()
+        stopwatch = Stopwatch("Jaka bug1")
 
         t1 = Not(Or([And([Or([V("p"), V("q")]),Or([V("p"), V("r")])]),And([Not(V("a")), V("b"), V('c')])]))
         t2 = And([And([Tru(),V("q"),V("p"),V("r"),Not(V("a")),V("b")]),Or([V("c"),V("x"),V("w")])])
@@ -90,7 +90,7 @@ class MyTestCase(unittest.TestCase):
         t4 = Or([Or([And([V('A'), V('B')]), And([V('C'), V('D')])]),V('E')])
 
         simplify(t1)
-        stopwatch.intermediate()
+        stopwatch.intermediate("gieuigheuihreiugeh")
         simplify(t2)
         simplify(t3)
         stopwatch.intermediate()

@@ -146,9 +146,11 @@ class XOR(And):
 
 
 class Stopwatch():
-    def __init__(self):
+    def __init__(self,name="Tags:"):
         self.timestamps = [time()]
         self.tags = ["Start"]
+        self.name = name
+        self.dx = len(name)+1
 
     def intermediate(self,tag=""):
         if len(self.timestamps) == 0:
@@ -195,18 +197,23 @@ class Stopwatch():
             self.tags.append(tag)
 
     def __repr__(self):
-        x = "Time: "
-        y = "      "
+        ind2 = max(self.dx,6)
+        x = "Time:"+" "*(ind2-5) + "| "
+        y = self.name + " "*(ind2 - len(self.name)) + "| "
+
         if len(self.timestamps) > 0:
             for t in range(0,len(self.timestamps)-2):
                 #x += str(self.timestamps[t+1] - self.timestamps[t])+" "
 
                 tmp = '%.3f ' % (self.timestamps[t+1] - self.timestamps[t])
-                x += tmp+" "*(abs(8-len(tmp)))
-                y += self.tags[t+1] + " "*abs(8-len(self.tags[t+1]))
+                indent = max(len(tmp),len(self.tags[t+1]))+1
 
-            x += "\n"
-            x += "Total: %.3f" % (self.timestamps[len(self.timestamps)-1] - self.timestamps[0]) + " s"
+                x += tmp+" "*(abs(indent-len(tmp)))+"| "
+                y += self.tags[t+1] + " "*abs(indent-len(self.tags[t+1]))+"| "
+
+            y += "TOTAL"
+            x += "%.3f" % (self.timestamps[len(self.timestamps)-1] - self.timestamps[0]) + " s"
+            x += "\n --------------------------"
         else:
             x += "Stopwatch not started."
         y += "\n"
