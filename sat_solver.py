@@ -4,6 +4,7 @@ __author__ = 'jaka'
 
 from lvr_vaje1 import And
 from time import time
+import itertools
 
 class Fls:
     def __init__(self):
@@ -154,6 +155,7 @@ class Stopwatch():
         self.dx = len(name)+1
 
     def intermediate(self,tag=""):
+        tag = str(tag)
         if len(self.timestamps) == 0:
             print "Error. Stopwatch not running. Starting it now."
             self.timestamps.append(time())
@@ -472,41 +474,43 @@ def X2SATsudoku(vhod):
     Vaje 3 - prevedbe problemov
 """
 
+#Iskanje hadamardove matrike stopnje n.
+#Vrne logicno funkcijo, katere resitev (ce obstaja) je hadamardova matrika
 def hadamardova_matrika(n):
+    if n % 2 == 1:
+        return Fls
+
     n = n+1 #ker stejemo indekse matrike od 1 naprej
     matrika = {}
 
-    for i in range(1,n):
-        for j in range(1,n):
+    for i in range(1,n):#stolpec
+        for j in range(1,n):#vrstica
             matrika[(i,j)] = V("a"+str(i)+","+str(j))
 
     formula = []
 
     for i in range(1,n-1):#stolpci
-        temp = []
+        xorParov = []
         for j in range(1,n):#vrstice
-            for k in range(j+1,n):#vrstice
-                t1 = Not(XOR(matrika[(j, i)], matrika[(j, i+1)]))
-                t2 = Not(XOR(matrika[(k, i)], matrika[(k, i+1)]))
-                temp.append(XOR(t1,t2))
+            #dobimo XOR pare elementov v stolpcu i in i+1 v vrstici j
+            xorParov.append(XOR(matrika[(i,j)],matrika[(i+1,j)]))
 
-        while len(temp) > 2:
-            temp2 = []
-            for i1 in range(len(temp)-1):
-                temp2.append(XOR(temp[i1],temp[i1+1]))
-            temp = temp2
+        stolpecFormula = []
+        #tole bi se dalo se izbolsati, tako da izlocimo "simetricne" permutacije (1,2) == (2,1)
+        for perm in itertools.permutations(xorParov):
+            andFormula = list(perm[:len(perm)/2]) #pol jih mora biti pravilnih (1)
+            NandFormula = list(perm[len(perm)/2:]) #pol jih mora biti napacnih
+            NandFormula = Not(Or(NandFormula)) #drugi del morajo bit vsi 0, če postavimo vse v OR in OR negiramo dobimo to
 
-        if len(temp) == 1:
-            f = temp[0]
-        else:
-            f = And([temp[0],temp[1]])
+            andFormula.append(NandFormula) #zdruzimo
+            stolpecFormula.append(andFormula)
 
-        formula.append(f)
+        formula.append(Or(stolpecFormula)) #ena od verzij za stolpec mora biti pravilna
 
-    if len(formula) == 1:
-        return formula[0]
+    return And(formula) #za vsak stolpec mora biti vsaj 1 resitev
 
-    return And(formula)
+
+
 
 
 

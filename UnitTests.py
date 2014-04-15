@@ -119,23 +119,42 @@ class MyTestCase(unittest.TestCase):
     def test_hadamardova_matrika(self):
         st = Stopwatch("Hadamardova")
 
-        r = XOR(Not(XOR(V("a1,1"), V("a1,2"))), Not(XOR(V("a2,1"), V("a2,2"))))
-
-        print r
-        print hadamardova_matrika(2)#TODO tuki je neki cudnega, enako je ampak ce primerjas ni enako?
-        #self.assertEqual(hadamardova_matrika(2), r) weird
-
-
-        print hadamardova_matrika(3)
-        #print hadamardova_matrika(4)
-        #hadamardova_matrika(22) # priblizno 2.5s da resi
-        #hadamardova_matrika(24) # 3.3s
-        #hadamardova_matrika(26)  # 5s
-        #hadamardova_matrika(30)   #10s
-
+        print hadamardova_matrika(2)#testirano na roke, tale je ok
+        st.intermediate(2)
+        print hadamardova_matrika(3)#ok
+        st.intermediate(3)
+        print hadamardova_matrika(4)#potrebno testirati
+        st.intermediate(4)
+        hadamardova_matrika(6)
+        st.intermediate(6)
+        hadamardova_matrika(8)
+        st.intermediate(8)
 
         st.stop()
         print st
+
+    def test_dpll(self):
+        f1 = And([V("X"),V("Y")])
+        f2 = Not(Or([And([Or([V("p"), V("q")]),Or([V("p"), V("r")])]),And([Not(V("a")), V("b"), V('c')])]))
+        f3 = And([V("X"),Not(V("X"))])
+        f4 = Not(XOR(V("X"),V("Y")))
+        f5 = Not(And([V("X"),V("Y")]))
+
+        print {1:2,2:3}
+
+        print dpll(f1)
+        self.assertEqual(dpll(f1),"{'Y': Tru, q'X': Tru}")
+        print dpll(f2)
+        print dpll(f3)
+        print dpll(f5)
+
+
+        had2 = hadamardova_matrika(2)
+        print had2
+        had3 = XOR(Not(XOR(V("a1,1"),V("a1,2"))), Not(XOR(V("a2,1"),V("a2,2"))))
+
+
+        print dpll(had2)
 
 
 
