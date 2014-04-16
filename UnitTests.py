@@ -129,6 +129,8 @@ class MyTestCase(unittest.TestCase):
         st.intermediate(6)
         hadamardova_matrika(8)
         st.intermediate(8)
+        hadamardova_matrika(10)
+        st.intermediate(10)
 
         st.stop()
         print st

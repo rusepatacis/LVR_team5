@@ -496,6 +496,7 @@ def hadamardova_matrika(n):
             xorParov.append(XOR(matrika[(i,j)],matrika[(i+1,j)]))
 
         stolpecFormula = []
+        """
         #tole bi se dalo se izbolsati, tako da izlocimo "simetricne" permutacije (1,2) == (2,1)
         for perm in itertools.permutations(xorParov):
             andFormula = list(perm[:len(perm)/2]) #pol jih mora biti pravilnih (1)
@@ -504,6 +505,26 @@ def hadamardova_matrika(n):
 
             andFormula.append(NandFormula) #zdruzimo
             stolpecFormula.append(andFormula)
+        """
+
+        #optimizirano, ne podvajamo po nepotrebnem
+        #izberemo pol vrstic, pol jih mora biti pravilnih, pol napačnih
+        for perm in itertools.combinations(xorParov,len(xorParov)/2):
+            andFormula = []
+            NandFormula = []
+            for x in xorParov:
+                if x in perm:
+                    andFormula.append(x)#prva polovica
+                else:
+                    NandFormula.append(x)#druga polovica
+
+            NandFormula = Not(Or(NandFormula))
+
+            andFormula.append(NandFormula) #zdruzimo
+            stolpecFormula.append(andFormula)
+
+
+
 
         formula.append(Or(stolpecFormula)) #ena od verzij za stolpec mora biti pravilna
 
