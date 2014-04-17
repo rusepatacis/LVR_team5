@@ -390,6 +390,56 @@ def simplify_and_same(formula):
         return formula
     return formula
 
+def simplifyNot(formula):
+    if formula.__class__.__name__ == 'Not':
+        return pushNot(formula.formula)
+    elif formula.__class__.__name__ == 'V':
+        return formula
+    elif formula.__class__.__name__ == 'And':
+        tmpFormula = []
+        for f in formula.formule:
+            tmpFormula.append(simplifyNot(f))
+        return And(tmpFormula)
+    elif formula.__class__.__name__ == 'Or':
+        tmpFormula = []
+        for f in formula.formule:
+            tmpFormula.append(simplifyNot(f))
+        return Or(tmpFormula)
+    elif formula.__class__.__name__ == 'Imp':
+        return Imp(simplifyNot(formula.p),simplifyNot(formula.q))
+    elif formula.__class__.__name__ == 'Equiv':
+        return Equiv(simplifyNot(formula.p),simplifyNot(formula.q))
+    elif formula.__class__.__name__ == 'XOR':
+        return XOR(simplifyNot(formula.p),simplifyNot(formula.q))
+
+    print "Unknown operator"
+    return formula
+
+
+def pushNot(formula):
+    if formula.__class__.__name__ == 'V':
+        return Not(formula)
+    elif formula.__class__.__name__ == 'And':
+        tempFormula = []
+        for form in formula.formule:
+            tempFormula.append(pushNot(form))
+        return Or(tempFormula)
+    elif formula.__class__.__name__ == 'Or':
+        tempFormula = []
+        for form in formula.formule:
+            tempFormula.append(pushNot(form))
+        return And(tempFormula)
+    elif formula.__class__.__name__ == 'Not':
+        return simplifyNot(formula.formula)
+    elif formula.__class__.__name__ == 'Imp':
+        tmp = And([formula.p,Not(formula.q)])
+        return simplifyNot(tmp)
+    elif formula.__class__.__name__ == 'Equiv':
+        tmp = Or([And([formula.p,Not(formula.q)]),And([Not(formula.p),formula.q])])
+        return simplifyNot(tmp)
+    elif formula.__class__.__name__ == 'XOR':
+        tmp = Or([And([formula.p,formula.q]),And([Not(formula.p),Not(formula.q)])])
+        return simplifyNot(tmp)
 
 
 

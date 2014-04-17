@@ -158,6 +158,22 @@ class MyTestCase(unittest.TestCase):
 
         print dpll(had2)
 
+    def test_pushNot(self):
+        f0 = And([V("X"),V("Y")])
+        f1 = Not(And([V("X"), V("Y")]))
+        f2 = Not(Or([V("X"),V("Y")]))
+        f3 = Imp(V("X"),V("Y"))
+        f4 = Equiv(V("X"),V("Y"))
+        f5 = XOR(V("X"),V("Y"))
+
+        self.assertEqual(simplifyNot(f0),f0)
+        self.assertEqual(simplifyNot(f1),Or([Not(V("X")),Not(V("Y"))]))
+        self.assertEqual(simplifyNot(f2),And([Not(V("X")),Not(V("Y"))]))
+        self.assertEqual(simplifyNot(Not(f3)),And([V("X"),Not(V("Y"))]))
+        self.assertEqual(simplifyNot(Not(f4)),Or([And([V("X"),Not(V("Y"))]), And([Not(V("X")), V("Y")])]))
+        self.assertEqual(simplifyNot(Not(f5)),Or([And([V("X"),V("Y")]),And([Not(V("X")),Not(V("Y"))])]))
+
+
 
 
 if __name__ == '__main__':
