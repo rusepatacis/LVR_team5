@@ -8,6 +8,7 @@ from sat_solver import *
 class MyTestCase(unittest.TestCase):
     """
     Neumni osnovni testi, ki ne stestirajo prav dosti.
+    Preverijo ali spremembe osnovnih operatorjev se vedno podajo pricakovano vrednost.
     """
     def test_basic_operations(self):
         st = Stopwatch("Basic test")
@@ -23,6 +24,9 @@ class MyTestCase(unittest.TestCase):
         st.stop()
         print st
 
+    """
+    Testira osnovne (lahke) primere krajsanja formule.
+    """
     def test_simplify(self):
         st = Stopwatch("Simplify")
 
@@ -66,6 +70,9 @@ class MyTestCase(unittest.TestCase):
         st.stop()
         print st
 
+    """
+    Testira delovanje metode simplify_or_same ter simplify_and_same.
+    """
     def test_simplify_same(self):
         st = Stopwatch("Simplify same")
 
@@ -91,6 +98,9 @@ class MyTestCase(unittest.TestCase):
         st.stop()
         print st
 
+    """
+    Testiranje buga, ki ga je nasel Jaka.
+    """
     def test_jaka_found_bug1(self):
         stopwatch = Stopwatch("Jaka bug1")
 
@@ -116,6 +126,9 @@ class MyTestCase(unittest.TestCase):
         stopwatch.stop()
         print stopwatch
 
+    """
+    Testiranje hadamardove matrike.
+    """
     def test_hadamardova_matrika(self):
         st = Stopwatch("Hadamardova")
 
@@ -135,6 +148,9 @@ class MyTestCase(unittest.TestCase):
         st.stop()
         print st
 
+    """
+    Testiranje dpll.
+    """
     def test_dpll(self):
         f1 = And([V("X"),V("Y")])
         f2 = Not(Or([And([Or([V("p"), V("q")]),Or([V("p"), V("r")])]),And([Not(V("a")), V("b"), V('c')])]))
@@ -158,6 +174,9 @@ class MyTestCase(unittest.TestCase):
 
         print dpll(had2)
 
+    """
+    Testiranje potiskanja negacije navznoter.
+    """
     def test_pushNot(self):
         f0 = And([V("X"),V("Y")])
         f1 = Not(And([V("X"), V("Y")]))

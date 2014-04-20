@@ -6,6 +6,10 @@ from lvr_vaje1 import And
 from time import time
 import itertools
 
+"""
+Razred, ki predstavlja logicni FALSE (0).
+Uporaba: Fls()
+"""
 class Fls:
     def __init__(self):
         pass
@@ -20,7 +24,10 @@ class Fls:
         return str(self) == str(other)
 
 
-
+"""
+Razred, ki predstavlja logicni TRUE (1).
+Uporaba Tru()
+"""
 class Tru:
     def __init__(self):
         pass
@@ -37,7 +44,10 @@ class Tru:
     def __eq__(self, other):
         return str(self) == str(other)
 
-
+"""
+Razred, ki predstavlja spremenljivko v logicnem izrazu.
+Uporaba: V('X'); X := spremenljivka
+"""
 class V:
     def __init__(self, ime):
         self.ime = ime
@@ -54,7 +64,10 @@ class V:
     def __hash__(self):
         return hash(repr(self))
 
-
+"""
+Logicna negacija.
+Uporaba: Not(formula); Formula je lahko logicen izraz, ali spremenljivka.
+"""
 class Not:
     def __init__(self, p):
         self.formula = p
@@ -71,7 +84,11 @@ class Not:
     def __hash__(self):
         return hash(repr(self))
 
-
+"""
+Logicen konjunkcija (in).
+Uporaba: And([formula,formula]); Konjunkciji znotraj seznama podamo izraze/spremenljivke, ki jih povezuje.
+Opomba: Lahko dodamo, več kot 2 izraza. Npr: And([x,y,z]) -> (x in y in z)
+"""
 class And:
     def __init__(self, ps):
         self.formule = ps
@@ -90,7 +107,11 @@ class And:
     def __eq__(self, other):
         return str(self) == str(other)
 
-
+"""
+Logicen disjunkcija (ali).
+Uporaba: Or([formula,formula]); Disjunkcija znotraj seznama podamo izraze/spremenljivke, ki jih povezuje.
+Opomba: Lahko dodamo, več kot 2 izraza. Npr: Or([x,y,z]) -> (x ali y ali z)
+"""
 class Or:
     def __init__(self, ps):
         self.formule = ps
@@ -109,7 +130,12 @@ class Or:
     def __eq__(self, other):
         return str(self) == str(other)
 
+"""
+Logicna implikacija.
+Implementirana je z uporabo negacije.
 
+Uporaba: Imp(p,q); kjer sta p in q formuli ali spremenljivki.
+"""
 class Imp(Or):
     """
     Implcation
@@ -122,7 +148,12 @@ class Imp(Or):
     def __repr__(self):
         return str(self.p) + " [=>] " + str(self.q)
 
+"""
+Logicna ekvivalenca.
+Implementirana je z uporabo negacije, konjunkcije in disjunkcije.
 
+Uporaba: Equiv(p,q); p in q sta lahko formuli ali spremenljivki.
+"""
 class Equiv(And):
     """
     Logical equivalence
@@ -135,7 +166,12 @@ class Equiv(And):
     def __repr__(self):
         return str(self.p) + " [<=>] " + str(self.q)
 
+"""
+Ekskluzivni ali.
+Implementiran z uporabo negacije, disjunkcije in konjunkcije.
 
+Uporaba: XOR(p,q); p in q sta lahko spremenljivki ali formuli.
+"""
 class XOR(And):
 
     def __init__(self, p, q):
@@ -146,7 +182,14 @@ class XOR(And):
     def __repr__(self):
         return str(self.p) + " [XOR] " + str(self.q)
 
+"""
+Razred stoparica, namenjen merjenju cas izvajanja razlicnih delov programa.
+Ukazi: intermediate(tag), start(tag),restart(tag),stop(tag).
+Stoparica se avtomatsko aktivira, ko kreiramo objekt. Z uporabo "intermediate" lahko dodajamo vmesne case.
+Tag se uporablja za oznacevanje dogodka, ce ga pustimo prazno se uporabi prednastavljena vrednost.
 
+Case izpisemo z uporabo print(Stopwatch()).
+"""
 class Stopwatch():
     def __init__(self,name="Tags:"):
         self.timestamps = [time()]
@@ -224,7 +267,11 @@ class Stopwatch():
 
 
 
-
+"""
+Metoda namenjena poenostavljanju logicnih izrazov.
+Kot parameter sprejme logicno formulo (izraz) ter ga poskusa poenostaviti. Deluje na rekurziven nacin.
+Na koncu nam vrne poenostavljeno fomrulo.
+"""
 def simplify(formula, verbose=False):
     if verbose:
         print "\t\t", formula, formula.__class__
@@ -309,6 +356,13 @@ def simplify(formula, verbose=False):
     else:
         return formula
 
+"""
+Podmetoda metode simplify.
+Pokrajsa vgnezdene izraze Ali.
+Npr: (X ali Y) ali (X ali Z) -> (X ali Y ali Z)
+
+Lahko resi tudi mesane izraze (konjunkcije in disjunkcije)
+"""
 def simplify_or_same(formula):
     if formula.__class__.__name__ in ('V','Not'):
         return formula
@@ -351,6 +405,13 @@ def simplify_or_same(formula):
         return formula
     return formula
 
+"""
+Podmetoda metode simplify.
+Pokrajsa vgnezdene izraze In.
+Npr: (X in Y) in (X in Z) -> (X in Y in Z)
+
+Lahko resi tudi mesane izraze (konjunkcije in disjunkcije)
+"""
 def simplify_and_same(formula):
     if formula.__class__.__name__ in ('V','Not'):
         return formula
@@ -390,6 +451,11 @@ def simplify_and_same(formula):
         return formula
     return formula
 
+"""
+Porine negacije navznoter do spremenljivk.
+Ta del metode dobi dobi celoten izraz (formulo), katero nato rekurzivno razcleni.
+Ce naleti na negacijo, porine ta del formule metodi "push not".
+"""
 def simplifyNot(formula):
     if formula.__class__.__name__ == 'Not':
         return pushNot(formula.formula)
@@ -415,7 +481,12 @@ def simplifyNot(formula):
     print "Unknown operator"
     return formula
 
-
+"""
+Porine negacije navznoter do spremenljivk.
+Ta del metode predpostavi, da je prejsnji operand negacija. Glede na naslednji operand nato
+ustrezno porine negacijo navznoter, ter se rekurzivno klice naprej.
+Ce naleti na dvojno negacijo jo iznici (pokrajsa).
+"""
 def pushNot(formula):
     if formula.__class__.__name__ == 'V':
         return Not(formula)
@@ -524,8 +595,10 @@ def X2SATsudoku(vhod):
     Vaje 3 - prevedbe problemov
 """
 
-#Iskanje hadamardove matrike stopnje n.
-#Vrne logicno funkcijo, katere resitev (ce obstaja) je hadamardova matrika
+"""
+Iskanje hadamardove matrike stopnje n.
+Vrne logicno funkcijo, katere resitev (ce obstaja) je hadamardova matrika.
+"""
 def hadamardova_matrika(n):
     if n % 2 == 1:
         return Fls
@@ -572,9 +645,6 @@ def hadamardova_matrika(n):
 
             andFormula.append(NandFormula) #zdruzimo
             stolpecFormula.append(andFormula)
-
-
-
 
         formula.append(Or(stolpecFormula)) #ena od verzij za stolpec mora biti pravilna
 
