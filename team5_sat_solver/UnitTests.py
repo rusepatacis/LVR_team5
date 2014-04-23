@@ -4,7 +4,7 @@ __author__ = 'Jani'
 import unittest
 
 from dpll import dpll
-from hadamard import hadamardova_matrika
+from team5_sat_solver.sat_prevedbe.hadamard import hadamardova_matrika
 from operands import *
 from simplify import push_not, simplify_not, simplify, simplify_and_same, simplify_or_same
 from utils import Stopwatch

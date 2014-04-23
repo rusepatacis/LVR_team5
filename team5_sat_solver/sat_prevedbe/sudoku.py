@@ -1,14 +1,20 @@
 __author__ = 'Jaka & Jani'
 #coding: UTF-8
 
-from operands import *
+from team5_sat_solver.operands import *
 
 
 def X2SATsudoku(vhod):
     """
-        vhod - slovar (i,j) -> stevilka.
-        Xijk --- na (i,j) je k
+        vhod - slovar z vnosi ((i,j) -> stevilka), kjer je
+            i indeks [1-9] vrstice v sudoku tabeli
+            j indeks [1-9] stolpca v sudoku tabeli
+            stevilka - znana vrednost na danem mestu
+
+        Vrne formulo, ki ustreza prevedbi sudokuja na problem SAT.
+        Vsebuje spremenljivke oblike Xijk, ki oznacujejo resnicnost izjav: na mestu (i,j) je stevilo k
     """
+    # Pogoji za veljavnost vnosov v vrsticah.
     temp_vrstica = []
     for i in range(1,10):
         for a in range(1,9):
@@ -43,6 +49,7 @@ def X2SATsudoku(vhod):
                         ]))
     vrstice = And(temp_vrstica)
 
+    # Pogoji za veljavnost vnosov v stolpcih.
     temp_stolpec = []
     for i in range(1,10):
         for a in range(1,9):
@@ -54,6 +61,7 @@ def X2SATsudoku(vhod):
                     ]))
     stolpci = And(temp_stolpec)
 
+    # Pogoji za veljavnost vnosov v notranjih kvadratih.
     temp_kvadrat = []
     for i in range(1, 10, 3):
         for j in range(1, 10, 3):
@@ -68,4 +76,6 @@ def X2SATsudoku(vhod):
                             V('X'+str(drugi_x)+str(drugi_y)+str(k))
                         ]))
     kvadranti = And(temp_kvadrat)
+
+    # Za pravilno izpoljnjen sudoku mora veljati konjunkcija vseh navedenih podpogojev.
     return And([vrstice, stolpci, kvadranti])

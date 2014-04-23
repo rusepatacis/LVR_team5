@@ -2,7 +2,7 @@ __author__ = 'Jaka & Jani'
 #coding: UTF-8
 
 import itertools
-from operands import *
+from team5_sat_solver.operands import *
 
 
 def hadamardova_matrika(n):
