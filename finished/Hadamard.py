@@ -1,32 +1,32 @@
 __author__ = 'Jaka & Jani'
 #coding: UTF-8
 
-
-from operands import *
 import itertools
+from operands import *
 
-"""
-Iskanje hadamardove matrike stopnje n.
-Vrne logicno funkcijo, katere resitev (ce obstaja) je hadamardova matrika.
-"""
+
 def hadamardova_matrika(n):
+    """
+    Iskanje hadamardove matrike stopnje n.
+    Vrne logicno funkcijo, katere resitev (ce obstaja) je hadamardova matrika.
+    """
     if n % 2 == 1:
         return Fls
 
-    n = n+1 #ker stejemo indekse matrike od 1 naprej
+    n += 1   # Ker stejemo indekse matrike od 1 naprej.
     matrika = {}
 
-    for i in range(1,n):#stolpec
-        for j in range(1,n):#vrstica
-            matrika[(i,j)] = V("a"+str(i)+","+str(j))
+    for i in range(1, n):    # Stolpec
+        for j in range(1, n):    # Vrstica
+            matrika[(i, j)] = V("a" + str(i) + "," + str(j))
 
     formula = []
 
-    for i in range(1,n-1):#stolpci
+    for i in range(1, n-1):  # Stolpci
         xorParov = []
-        for j in range(1,n):#vrstice
-            #dobimo XOR pare elementov v stolpcu i in i+1 v vrstici j
-            xorParov.append(XOR(matrika[(i,j)],matrika[(i+1,j)]))
+        for j in range(1, n):    # Vrstice
+            # Dobimo XOR pare elementov v stolpcu i in i+1 v vrstici j.
+            xorParov.append(XOR(matrika[(i, j)], matrika[(i+1, j)]))
 
         stolpecFormula = []
         """
@@ -40,25 +40,28 @@ def hadamardova_matrika(n):
             stolpecFormula.append(andFormula)
         """
 
-        #optimizirano, ne podvajamo po nepotrebnem
-        #izberemo pol vrstic, pol jih mora biti pravilnih, pol napačnih
-        for perm in itertools.combinations(xorParov,len(xorParov)/2):
-            andFormula = []
-            NandFormula = []
+        # Optimizirano, ne podvajamo po nepotrebnem.
+        # Izberemo pol vrstic, pol jih mora biti pravilnih, pol napačnih.
+        for perm in itertools.combinations(xorParov, len(xorParov)/2):
+            andFormula, NandFormula = [], []
             for x in xorParov:
                 if x in perm:
-                    andFormula.append(x)#prva polovica
+                    andFormula.append(x)    # Prva polovica
                 else:
-                    andFormula.append(Not(x))#druga polovica
+                    andFormula.append(Not(x))   # Druga polovica
 
             #NandFormula = Not(Or(NandFormula))#negiran XOR
 
             #andFormula.append(NandFormula) #zdruzimo
             stolpecFormula.append(And(andFormula))
 
-        formula.append(Or(stolpecFormula)) #ena od verzij za stolpec mora biti pravilna
+        formula.append(Or(stolpecFormula))  # Ena od verzij za stolpec mora biti pravilna.
 
-    return And(formula) #za vsak stolpec mora biti vsaj 1 resitev
+    return And(formula)     # Za vsak stolpec mora biti vsaj 1 resitev.
+
+
+
+
 
 
 """

@@ -1,10 +1,14 @@
 __author__ = 'Jaka & Jani'
 #coding: UTF-8
 
+""" Osnovni logicni operandi, ki jih uporabljamo za konstrukcijo formul. """
+
 """
 Razred, ki predstavlja logicni FALSE (0).
 Uporaba: Fls()
 """
+
+
 class Fls:
     def __init__(self):
         pass
@@ -21,8 +25,10 @@ class Fls:
 
 """
 Razred, ki predstavlja logicni TRUE (1).
-Uporaba Tru()
+Uporaba: Tru()
 """
+
+
 class Tru:
     def __init__(self):
         pass
@@ -43,6 +49,8 @@ class Tru:
 Razred, ki predstavlja spremenljivko v logicnem izrazu.
 Uporaba: V('X'); X := spremenljivka
 """
+
+
 class V:
     def __init__(self, ime):
         self.ime = ime
@@ -63,6 +71,8 @@ class V:
 Logicna negacija.
 Uporaba: Not(formula); Formula je lahko logicen izraz, ali spremenljivka.
 """
+
+
 class Not:
     def __init__(self, p):
         self.formula = p
@@ -84,6 +94,8 @@ Logicen konjunkcija (in).
 Uporaba: And([formula,formula]); Konjunkciji znotraj seznama podamo izraze/spremenljivke, ki jih povezuje.
 Opomba: Lahko dodamo, več kot 2 izraza. Npr: And([x,y,z]) -> (x in y in z)
 """
+
+
 class And:
     def __init__(self, ps):
         self.formule = ps
@@ -91,22 +103,25 @@ class And:
     def __repr__(self):
         return "(%s)" % (" [AND] ".join(str(f) for f in self.formule))
 
-
     def vrednost(self, v):
         b = True
         for p in self.formule:
             b = b and p.vrednost(v)
-            if not b: break
+            if not b:
+                break
         return b
 
     def __eq__(self, other):
         return str(self) == str(other)
 
+
 """
 Logicen disjunkcija (ali).
 Uporaba: Or([formula,formula]); Disjunkcija znotraj seznama podamo izraze/spremenljivke, ki jih povezuje.
-Opomba: Lahko dodamo, več kot 2 izraza. Npr: Or([x,y,z]) -> (x ali y ali z)
+Opomba: Lahko dodamo več kot 2 izraza. Npr: Or([x,y,z]) -> (x ali y ali z)
 """
+
+
 class Or:
     def __init__(self, ps):
         self.formule = ps
@@ -114,16 +129,17 @@ class Or:
     def __repr__(self):
         return "(%s)" % (" [OR] ".join(str(f) for f in self.formule))
 
-
     def vrednost(self, v):
         b = False
         for p in self.formule:
             b = b or p.vrednost(v)
-            if b: break
+            if b:
+                break
         return b
 
     def __eq__(self, other):
         return str(self) == str(other)
+
 
 """
 Logicna implikacija.
@@ -131,6 +147,8 @@ Implementirana je z uporabo negacije.
 
 Uporaba: Imp(p,q); kjer sta p in q formuli ali spremenljivki.
 """
+
+
 class Imp(Or):
     """
     Implcation
@@ -149,6 +167,8 @@ Implementirana je z uporabo negacije, konjunkcije in disjunkcije.
 
 Uporaba: Equiv(p,q); p in q sta lahko formuli ali spremenljivki.
 """
+
+
 class Equiv(And):
     """
     Logical equivalence
@@ -161,12 +181,15 @@ class Equiv(And):
     def __repr__(self):
         return str(self.p) + " [<=>] " + str(self.q)
 
+
 """
 Ekskluzivni ali.
 Implementiran z uporabo negacije, disjunkcije in konjunkcije.
 
 Uporaba: XOR(p,q); p in q sta lahko spremenljivki ali formuli.
 """
+
+
 class XOR(And):
 
     def __init__(self, p, q):

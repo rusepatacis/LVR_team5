@@ -2,11 +2,12 @@ __author__ = 'Jaka & Jani'
 #coding: UTF-8
 
 from operands import *
-from Simplify import *
+from simplify import simplify
+
 
 def only_literals(p):
     """
-    Vrne True, ce so v formuli p samo spremenljivke (in ne dodatni operatorji)
+    Vrne True, ce so v formuli p samo literali (in ne dodatni operatorji). Sicer False.
     """
     # Loceno preverimo Not
     if isinstance(p, Not):
@@ -23,15 +24,17 @@ def only_literals(p):
 
 def is_CNF_clause(p):
     """
-    Ce imamo disjunkcijo, ki ima notri samo literale ali negirane literale, jo lahko porabimo za CNF
-    (konjukcija takih disjunkcij je CNF).
+    Vrne True, ce je formula p CNF stavek (disjunkcija literalov). Sicer False.
+
+    Ce imamo disjunkcijo, ki ima notri samo literale ali negirane literale, jo lahko porabimo za CNF.
+    Konjukcija takih disjunkcij je CNF.
     """
     return isinstance(p, Or) and only_literals(p)
 
 
 def is_CNF_formula(p):
     """
-    Vrne true ce je formula p v CNF obliki
+    Vrne true ce je formula p v CNF obliki,
     """
     # Imeti moramo konjunkcijo...
     if isinstance(p, And):
@@ -46,7 +49,11 @@ def is_CNF_formula(p):
 
 def convert_to_CNF(p, verbose=False):
     """
-    Pretvorba formule v CNF
+    Pretvorba formule v CNF.
+    p - formula za pretvorbo
+    verbose - zastavica za izpis poteka funkcije
+
+    Vrne formulo p v CNF obliki.
     """
     def convert_nnf_to_CNF(cs, verbose=False):
         if isinstance(cs, Tru):
@@ -68,8 +75,7 @@ def convert_to_CNF(p, verbose=False):
         if isinstance(cs, And):
             if verbose:
                 print "And", cs
-            return splosci(And([convert_nnf_to_CNF(term, verbose)
-                        for term in cs.formule]))
+            return splosci(And([convert_nnf_to_CNF(term, verbose) for term in cs.formule]))
         if isinstance(cs, Or):
             if not cs.formule:
                 if verbose:
@@ -78,11 +84,11 @@ def convert_to_CNF(p, verbose=False):
             elif len(cs.formule) == 1:
                 if verbose:
                     print "Or 1", cs
-                return splosci(convert_nnf_to_CNF(cs.formule[0]), verbose)
+                return splosci(convert_nnf_to_CNF(cs.formule[0]))
             else:
                 if verbose:
                     print "Or > 2", cs
-                # Kompliciran or, potrebna distribucija
+                # Kompliciran Or, potrebna distribucija
                 konj, ostalo = [], []
                 for f in cs.formule:
                     if isinstance(f, And):
@@ -92,7 +98,8 @@ def convert_to_CNF(p, verbose=False):
                 if not konj:
                     return splosci(Or(ostalo))
                 else:
-                    return splosci(And([convert_nnf_to_CNF(Or(ostalo+[el]+konj[1:]), verbose) for el in konj[0].formule]))
+                    return splosci(And([convert_nnf_to_CNF(Or(ostalo+[el]+konj[1:]), verbose)
+                                        for el in konj[0].formule]))
     tmp_cnf = convert_nnf_to_CNF(splosci(simplify(p)), verbose=verbose)
     # Polovimo proste literatle
     new_formule = []
@@ -103,12 +110,17 @@ def convert_to_CNF(p, verbose=False):
             new_formule.append(f)
     return And(new_formule)
 
+
 def splosci(f):
     """
-    Splosci (flatten) dani izraz, kolikor je mozno.
+    Splosci (flatten) dano formulo f, kolikor je mozno.
     """
     a = simplify(f)
+
     def splosci_aux(p):
+        """
+        Pomozna funkcija za rekurzivne klice.
+        """
         if isinstance(p, And):
             nove = []
             for fr in p.formule:
@@ -128,5 +140,5 @@ def splosci(f):
         else:
             return p
         return p
-    return splosci_aux(a)
 
+    return splosci_aux(a)

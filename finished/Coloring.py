@@ -3,6 +3,7 @@ __author__ = 'Jaka & Jani'
 
 from operands import *
 
+
 def barvanje(G, b):
     """
         Prevedba problema barvanja grafov na SAT
@@ -27,10 +28,12 @@ def barvanje(G, b):
 
     # Nobeno vozlišče ni hkrati pobarvnano z dvema barvama
     pari_barv = [(barve[j], barve[i]) for i in range(len(barve)) for j in range(i)]
-    nobeno_dvakrat = And([And([Not(And([spremenljivke[(v, par_barv[0])], spremenljivke[(v, par_barv[1])]])) for par_barv in pari_barv]) for v in vozlisca])
+    nobeno_dvakrat = And([And([Not(And([spremenljivke[(v, par_barv[0])], spremenljivke[(v, par_barv[1])]]))
+                               for par_barv in pari_barv]) for v in vozlisca])
 
     # Povezani vozlišči nista iste barve
-    povezani_nista_iste = And([[Not(And([spremenljivke[(vi, k)], spremenljivke[(vj, k)]])) for k in barve] for (vi, vj) in G])
+    povezani_nista_iste = And([[Not(And([spremenljivke[(vi, k)], spremenljivke[(vj, k)]])) for k in barve]
+                               for (vi, vj) in G])
 
     # Prevedba je konjunkcija pogojev
     return And([vsaj_ena_barva, nobeno_dvakrat, povezani_nista_iste])

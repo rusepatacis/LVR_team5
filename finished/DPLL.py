@@ -1,14 +1,23 @@
 __author__ = 'Jaka & Jani'
 #coding: UTF-8
 
+""" Modul, ki vsebuje algoritem DPLL. """
+
+from cnf import convert_to_CNF
 from operands import *
-from CNF import *
+
 
 def dpll(f, verbose=False):
     """
-    DPLL algorithm
+    Algoritem DPLL za resevanje SAT.
+    f - formula (objekt operandov)
+    verbose - zastavica za izpis poteka funkcije
 
-    formula.vrednost(dpll(formula)) will return True (if the problem is solvable)
+    Ce je formula izpolnjiva, vrne slovar t vnosi oblike ('ime_spremenljvke' -> resnicnost [Tru/Fls])
+    sicer vrne False.
+
+    Klic
+        f.vrednost(dpll(f)) bo vrnil True (ce je problem resljiv).
     """
     if verbose:
         print "Formula", f
@@ -35,7 +44,6 @@ def dpll(f, verbose=False):
         print "CS_____", cs
         print "CSitemC", len(cs)
 
-
     def dpll_aux(v, cs, verbose=False):
 
         # Slovar spremenljivk, katerih vrednosti še ne poznamo
@@ -43,12 +51,11 @@ def dpll(f, verbose=False):
         if verbose:
             print "Nezanane vrednosti", sorted(list(neznane_vrednosti))
 
-
         # Optimiziramo z sortiranjem seznama stavkov po velikosti (krajse stavke obdelamo prej)
         cs = sorted(cs, key=lambda x: len(x.formule))
 
         # Gremo cez stavke in obravnavmo primere
-        ocisceni_cs=[]
+        ocisceni_cs = []
         for i, stavek in enumerate(cs):
             # Naletimo na prazen stavek --> false (ni resitve)
             if not stavek.formule:
@@ -98,7 +105,6 @@ def dpll(f, verbose=False):
         if not cs:
             return v
 
-
         # cs sedaj ni prazen
         # se vedno imamo stavke za obdelavo, a trenutno nimamo dodatnega znanja
         # zato izberemo xi in preizkusimo xi = Fls in xi = Tru
@@ -113,7 +119,6 @@ def dpll(f, verbose=False):
                 return dpll_aux(v, cs, verbose)
             else:
                 return v1
-
 
     v = dpll_aux(v, cs, verbose)
     if v:

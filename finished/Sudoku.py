@@ -3,12 +3,12 @@ __author__ = 'Jaka & Jani'
 
 from operands import *
 
+
 def X2SATsudoku(vhod):
     """
-        vhod - slovar (i,j) -> stevilka
+        vhod - slovar (i,j) -> stevilka.
         Xijk --- na (i,j) je k
     """
-
     temp_vrstica = []
     for i in range(1,10):
         for a in range(1,9):
