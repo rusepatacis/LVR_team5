@@ -1,21 +1,21 @@
 __author__ = 'Jaka & Jani'
-#coding UTF-8
+#coding: UTF-8
 
 from operands import *
 from Simplify import *
 
 def only_literals(p):
     """
-    Vrne True, če so v formuli p samo spremenljivke (in ne dodatni operatorji)
+    Vrne True, ce so v formuli p samo spremenljivke (in ne dodatni operatorji)
     """
-    # Ločeno preverimo Not
+    # Loceno preverimo Not
     if isinstance(p, Not):
         return isinstance(p.formula, V)
-    # Sicer preverjamo posamezne člene
+    # Sicer preverjamo posamezne clene
     for trm in p.formule:
         if not isinstance(trm, V) and not isinstance(trm, Not):
             return False
-        # Preverimo tudi negirane člene
+        # Preverimo tudi negirane clene
         elif isinstance(trm, Not) and not isinstance(trm.formula, V):
             return False
     return True
@@ -23,7 +23,7 @@ def only_literals(p):
 
 def is_CNF_clause(p):
     """
-    Če imamo disjunkcijo, ki ima notri samo literale ali negirane literale, jo lahko porabimo za CNF
+    Ce imamo disjunkcijo, ki ima notri samo literale ali negirane literale, jo lahko porabimo za CNF
     (konjukcija takih disjunkcij je CNF).
     """
     return isinstance(p, Or) and only_literals(p)
@@ -31,7 +31,7 @@ def is_CNF_clause(p):
 
 def is_CNF_formula(p):
     """
-    Vrne true če je formula p v CNF obliki
+    Vrne true ce je formula p v CNF obliki
     """
     # Imeti moramo konjunkcijo...
     if isinstance(p, And):

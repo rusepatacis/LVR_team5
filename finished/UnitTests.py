@@ -2,7 +2,14 @@ __author__ = 'Jani'
 #coding: UTF-8
 
 import unittest
-from sat_solver import *
+from CNF import *
+from Coloring import *
+from DPLL import *
+from Hadamard import *
+from operands import *
+from Simplify import *
+from Sudoku import *
+from Utils import *
 
 
 class MyTestCase(unittest.TestCase):
@@ -15,12 +22,10 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(Tru(), "Tru")
         self.assertEqual(Fls(), "Fls")
         self.assertEqual(V("X"), "X")
-        self.assertEqual(Not("X"),"¬X")
-        self.assertEqual(And([V("X"), V("Y")]), "(X ∧ Y)")
-        self.assertEqual(Or([V("X"), V("Y")]),"(X ∨ Y)")
-        xx = "(X ⇒ Y)"
-        print xx,xx == Imp(V("X"),V("Y"))
-        self.assertEqual(Imp(V("X"),V("Y")),xx)#TODO to neki cudno izpise z asci kodo
+        self.assertEqual(Not("X"),"[NOT](X)")
+        self.assertEqual(And([V("X"), V("Y")]), "(X [AND] Y)")
+        self.assertEqual(Or([V("X"), V("Y")]),"(X [OR] Y)")
+        self.assertEqual(Imp(V("X"),V("Y")),"X [=>] Y")#TODO to neki cudno izpise z asci kodo
         st.stop()
         print st
 
@@ -132,6 +137,8 @@ class MyTestCase(unittest.TestCase):
     def test_hadamardova_matrika(self):
         st = Stopwatch("Hadamardova")
 
+        print Or([V("1"),V("2"),V("3"),V("4")])
+
         print hadamardova_matrika(2)#testirano na roke, tale je ok
         st.intermediate(2)
         print hadamardova_matrika(3)#ok
@@ -158,10 +165,7 @@ class MyTestCase(unittest.TestCase):
         f4 = Not(XOR(V("X"),V("Y")))
         f5 = Not(And([V("X"),V("Y")]))
 
-        print {1:2,2:3}
-
-        print dpll(f1)
-        self.assertEqual(dpll(f1),"{'Y': Tru, q'X': Tru}")
+        self.assertEqual(dpll(f1),{"X":"Tru","Y":"Tru"})
         print dpll(f2)
         print dpll(f3)
         print dpll(f5)
@@ -169,6 +173,7 @@ class MyTestCase(unittest.TestCase):
 
         had2 = hadamardova_matrika(2)
         print had2
+        print pushNot(had2)
         had3 = XOR(Not(XOR(V("a1,1"),V("a1,2"))), Not(XOR(V("a2,1"),V("a2,2"))))
 
 
@@ -191,6 +196,10 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(simplifyNot(Not(f3)),And([V("X"),Not(V("Y"))]))
         self.assertEqual(simplifyNot(Not(f4)),Or([And([V("X"),Not(V("Y"))]), And([Not(V("X")), V("Y")])]))
         self.assertEqual(simplifyNot(Not(f5)),Or([And([V("X"),V("Y")]),And([Not(V("X")),Not(V("Y"))])]))
+
+        h2 = hadamardova_matrika(2)
+        print h2
+        print pushNot(h2)
 
 
 
