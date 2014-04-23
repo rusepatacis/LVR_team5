@@ -137,8 +137,6 @@ class MyTestCase(unittest.TestCase):
     def test_hadamardova_matrika(self):
         st = Stopwatch("Hadamardova")
 
-        print Or([V("1"),V("2"),V("3"),V("4")])
-
         print hadamardova_matrika(2)#testirano na roke, tale je ok
         st.intermediate(2)
         print hadamardova_matrika(3)#ok

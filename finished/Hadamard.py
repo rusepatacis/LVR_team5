@@ -49,12 +49,12 @@ def hadamardova_matrika(n):
                 if x in perm:
                     andFormula.append(x)#prva polovica
                 else:
-                    NandFormula.append(x)#druga polovica
+                    andFormula.append(Not(x))#druga polovica
 
-            NandFormula = Not(Or(NandFormula))
+            #NandFormula = Not(Or(NandFormula))#negiran XOR
 
-            andFormula.append(NandFormula) #zdruzimo
-            stolpecFormula.append(andFormula)
+            #andFormula.append(NandFormula) #zdruzimo
+            stolpecFormula.append(And(andFormula))
 
         formula.append(Or(stolpecFormula)) #ena od verzij za stolpec mora biti pravilna
 
@@ -93,7 +93,7 @@ def hadamardova_matrikaOLD(n):
             NandFormula = Not(Or(NandFormula)) #drugi del morajo bit vsi 0, če postavimo vse v OR in OR negiramo dobimo to
 
             andFormula.append(NandFormula) #zdruzimo
-            stolpecFormula.append(andFormula)
+            stolpecFormula.append(andFormula)#TODO preglej ce dole deluje pravilno
 
         """
         #optimizirano, ne podvajamo po nepotrebnem
