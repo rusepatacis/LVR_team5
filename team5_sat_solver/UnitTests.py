@@ -65,9 +65,9 @@ class MyTestCase(unittest.TestCase):
     def test_medium(self):
         st = Stopwatch("Medium")
         formula3 = (Or([Or([V("p"), V("q")]), Or([V("q"), V("r")]), Or([V("r"), V("p")])]))  # (p∧q)∧(q∧r)∧(r∧p)
-        #self.assertEqual((simplify_or_same(formula3)), Or([V("p"), V("q"), V("r")]))
+        self.assertEqual((simplify_or_same(formula3)), Or([V("p"), V("q"), V("r")]))
         formula3 = (And([And([V("p"), V("q")]), And([V("q"), V("r")]), And([V("r"), V("p")])]))   # (p∧q)∧(q∧r)∧(r∧p)
-        #self.assertEqual((simplify_and_same(formula3)), And([V("p"), V("q"), V("r")]))
+        self.assertEqual((simplify_and_same(formula3)), And([V("p"), V("q"), V("r")]))
         st.stop()
         print st
 
@@ -163,6 +163,7 @@ class MyTestCase(unittest.TestCase):
         f4 = Not(XOR(V("X"), V("Y")))
         f5 = Not(And([V("X"), V("Y")]))
 
+        #print dpll(V("X"))#TODO tale ne dela
         self.assertEqual(dpll(f1), {"X": "Tru", "Y": "Tru"})
         print dpll(f2)
         print dpll(f3)

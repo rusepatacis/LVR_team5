@@ -30,7 +30,7 @@ def simplify(formula, verbose=False):
             return Fls()
         if formula.formula.__class__.__name__ == 'V':
             return Not(formula.formula)
-        return formula
+        return simplify_not(formula)
     elif formula.__class__.__name__ in ('And', 'Or'):
         if formula.__class__.__name__ == 'And':
             for b in formula.formule:
