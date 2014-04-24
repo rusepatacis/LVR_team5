@@ -101,7 +101,12 @@ def convert_to_CNF(p, verbose=False):
                     return splosci(And([convert_nnf_to_CNF(Or(ostalo+[el]+konj[1:]), verbose)
                                         for el in konj[0].formule]))
     tmp_cnf = convert_nnf_to_CNF(splosci(simplify(p)), verbose=verbose)
-    # Polovimo proste literatle
+    # Robni primeri.
+    if isinstance(tmp_cnf, V) or isinstance(tmp_cnf, Not) or isinstance(tmp_cnf, Fls):
+        return And([Or([tmp_cnf])])
+    if isinstance(tmp_cnf, Tru):
+        return Tru()
+    # Polovimo proste literatle.
     new_formule = []
     for f in tmp_cnf.formule:
         if isinstance(f, V) or isinstance(f, Not):

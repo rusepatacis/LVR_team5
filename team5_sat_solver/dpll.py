@@ -15,6 +15,7 @@ def dpll(f, verbose=False):
 
     Ce je formula izpolnjiva, vrne slovar t vnosi oblike ('ime_spremenljvke' -> resnicnost [Tru/Fls])
     sicer vrne False.
+    V primeru tavtologije brez prostih spremenljivk vrne True.
 
     Klic
         f.vrednost(dpll(f)) bo vrnil True (ce je problem resljiv).
@@ -30,6 +31,10 @@ def dpll(f, verbose=False):
     cnf_f = convert_to_CNF(f)
     if verbose:
         print "CNF____", cnf_f
+
+    # Primer tavtologije
+    if isinstance(cnf_f, Tru):
+        return True
 
     # Primer prazne formule
     if not cnf_f.formule:

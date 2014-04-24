@@ -163,7 +163,16 @@ class MyTestCase(unittest.TestCase):
         f4 = Not(XOR(V("X"), V("Y")))
         f5 = Not(And([V("X"), V("Y")]))
 
-        #print dpll(V("X"))#TODO tale ne dela
+        # Robni primeri DPLL.
+        print dpll(V("X"))
+        print dpll(Not(V("X")))
+        print dpll(Fls())
+        print dpll(Tru())
+        self.assertEqual(dpll(V("X")), {"X": "Tru"})
+        self.assertEqual(dpll(Not(V("X"))), {"X": "Fls"})
+        self.assertEqual(dpll(Fls()), False)
+        self.assertEqual(dpll(Tru()), True)
+
         self.assertEqual(dpll(f1), {"X": "Tru", "Y": "Tru"})
         print dpll(f2)
         print dpll(f3)
