@@ -169,11 +169,19 @@ class MyTestCase(unittest.TestCase):
         print dpll(f5)
 
         had2 = hadamardova_matrika(2)
+        hh = Or([And([XOR(V("a1,1"),V("a2,1")),Not(XOR(V("a1,2"),V("a2,2")))]),
+                 And([Not(XOR(V("a1,1"),V("a2,1"))),XOR(V("a1,2"),V("a2,2"))])])
+        print hh
         print had2
+        print "--------------------------"
+        print push_not(hh)
         print push_not(had2)
+        print "+++++++++++++++++++++++++++", hh == had2,push_not(hh) == push_not(had2)
+
         had3 = XOR(Not(XOR(V("a1,1"), V("a1,2"))), Not(XOR(V("a2,1"), V("a2,2"))))
 
-        print dpll(had2)
+        print dpll(push_not(hh))
+        print dpll(push_not(had2))
 
     def test_push_not(self):
         """

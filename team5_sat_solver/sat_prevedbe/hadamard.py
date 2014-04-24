@@ -57,7 +57,10 @@ def hadamardova_matrika(n):
 
         formula.append(Or(stolpecFormula))  # Ena od verzij za stolpec mora biti pravilna.
 
-    return And(formula)     # Za vsak stolpec mora biti vsaj 1 resitev.
+    if len(formula) == 1:
+        return formula[0]
+    else:
+        return And(formula)     # Za vsak stolpec mora biti vsaj 1 resitev.
 
 
 
@@ -117,4 +120,7 @@ def hadamardova_matrikaOLD(n):
         """
         formula.append(Or(stolpecFormula)) #ena od verzij za stolpec mora biti pravilna
 
-    return And(formula) #za vsak stolpec mora biti vsaj 1 resitev
+    if len(formula) == 1:
+        return formula[0]
+    else:
+        return And(formula)     # Za vsak stolpec mora biti vsaj 1 resitev.
