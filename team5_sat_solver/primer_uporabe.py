@@ -83,7 +83,7 @@ print h3
 print h4
 """"""""""""""
 """"""""""""""
-from team5_sat_solver.prevedba_coloring import barvanje
+from prevedba_coloring import barvanje
 #Kot vhod podamo neusmerjen graf. Povezave med vozlisci predstavimo s pari npr. G = [(v1,v2), (v2,v5), (v2,v3), ...]
 #Potrebno je podati tudi stevilo barv
 #Metoda vrne logicno enacbo, katere resitev bo predstavljalo barvanje grafa,
@@ -134,13 +134,12 @@ print dpll(And([XOR(V("X",V("Y"))),Or([V("X"),V("Y")])]))
 f2 = (Or([And([XOR(V("a1,1"),V("a2,1")),Not(XOR(V("a1,2"),V("a2,2")))]),
                  And([Not(XOR(V("a1,1"),V("a2,1"))),XOR(V("a1,2"),V("a2,2"))])]))
 
-#print dpll(push_not(f2)) #hadamarova matrika stopnje 2
+#print dpll(hadamard_simplifed(f2)) #hadamarova matrika stopnje 2
 #WTF, to v unit testu deluje, tukaj pa crasha :S
 
 """
 
-from  prevedba_coloring import barvanje
-from dpll import dpll
+
 petersen = [
     (6,7), (7,8), (8,9), (9,10), (10,6),
     (10,5), (6,1), (2,7), (3,8), (4,9),

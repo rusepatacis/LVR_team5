@@ -3,7 +3,7 @@ __author__ = 'Jaka & Jani'
 
 import itertools
 from operands import *
-
+from simplify import push_not
 
 def hadamardova_matrika(n):
     """
@@ -63,7 +63,11 @@ def hadamardova_matrika(n):
         return And(formula)     # Za vsak stolpec mora biti vsaj 1 resitev.
 
 
-
+def hadamard_simplifed(n):
+    """
+    Vrne izraz primeren za vhod v DPLL.
+    """
+    return push_not(hadamardova_matrika(n))
 
 
 

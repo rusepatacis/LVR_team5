@@ -4,7 +4,7 @@ __author__ = 'Jani'
 import unittest
 
 from dpll import dpll
-from prevedba_hadamard import hadamardova_matrika
+from prevedba_hadamard import hadamardova_matrika, hadamard_simplifed
 from operands import *
 from simplify import push_not, simplify_not, simplify, simplify_and_same, simplify_or_same
 from utils import Stopwatch
@@ -192,6 +192,7 @@ class MyTestCase(unittest.TestCase):
 
         print dpll(push_not(hh))
         print dpll(push_not(hadamardova_matrika(2)))
+        print dpll(hadamard_simplifed(2))
 
     def test_push_not(self):
         """
