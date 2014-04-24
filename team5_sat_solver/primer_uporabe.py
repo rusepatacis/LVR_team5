@@ -138,3 +138,13 @@ f2 = (Or([And([XOR(V("a1,1"),V("a2,1")),Not(XOR(V("a1,2"),V("a2,2")))]),
 #WTF, to v unit testu deluje, tukaj pa crasha :S
 
 """
+
+from  prevedba_coloring import barvanje
+from dpll import dpll
+petersen = [
+    (6,7), (7,8), (8,9), (9,10), (10,6),
+    (10,5), (6,1), (2,7), (3,8), (4,9),
+    (1,3), (1,4), (2,5), (2,4), (3,5)
+]
+
+
