@@ -1,7 +1,7 @@
 __author__ = 'Jaka & Jani'
 #coding: UTF-8
 
-from team5_sat_solver.operands import *
+from operands import *
 
 """ Prevedba problema barvanja grafa na problem SAT """
 

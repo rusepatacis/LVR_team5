@@ -4,7 +4,7 @@ __author__ = 'Jani'
 import unittest
 
 from dpll import dpll
-from team5_sat_solver.sat_prevedbe.hadamard import hadamardova_matrika
+from prevedba_hadamard import hadamardova_matrika
 from operands import *
 from simplify import push_not, simplify_not, simplify, simplify_and_same, simplify_or_same
 from utils import Stopwatch
@@ -20,7 +20,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(Tru(), "Tru")
         self.assertEqual(Fls(), "Fls")
         self.assertEqual(V("X"), "X")
-        self.assertEqual(Not("X"), "[NOT](X)")
+        self.assertEqual(Not(V("X")), "[NOT](X)")
         self.assertEqual(And([V("X"), V("Y")]), "(X [AND] Y)")
         self.assertEqual(Or([V("X"), V("Y")]), "(X [OR] Y)")
         self.assertEqual(Imp(V("X"), V("Y")), "X [=>] Y")    # TODO to neki cudno izpise z asci kodo
@@ -41,10 +41,10 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(simplify(Or([V("X"), Fls()])), V("X"))
         self.assertEqual(simplify(Or([V("X"), Fls(), V("Y")])), Or([V("X"), V("Y")]))
 
-        self.assertEqual(simplify(Not(Not("X"))), V("X"))
-        self.assertEqual(simplify(Not(Not(Not(Not("X"))))), V("X"))
-        self.assertEqual(simplify(Not("X")), Not("X"))
-        self.assertEqual(simplify(Not(Not(Not("X")))), Not("X"))
+        self.assertEqual(simplify(Not(Not(V("X")))), V("X"))
+        self.assertEqual(simplify(Not(Not(Not(Not(V("X")))))), V("X"))
+        self.assertEqual(simplify(Not(V("X"))), Not(V("X")))
+        self.assertEqual(simplify(Not(Not(Not(V("X"))))), Not(V("X")))
 
         self.assertEqual(simplify(V("X")), V("X"))
         self.assertEqual(simplify(Tru()), Tru())
@@ -53,11 +53,11 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(simplify(Or([V("X"), Tru()])), Tru())
         self.assertEqual(simplify(And([V("X"), V("Y"), Fls()])), Fls())
 
-        self.assertEqual(simplify(Or([V("X"), Not("X")])), Tru())
-        self.assertEqual(simplify(Or([Not("X"), V("Y"), V("X")])), Tru())
+        self.assertEqual(simplify(Or([V("X"), Not(V("X"))])), Tru())
+        self.assertEqual(simplify(Or([Not(V("X")), V("Y"), V("X")])), Tru())
 
-        self.assertEqual(simplify(And([V("X"), Not("X")])), Fls())
-        self.assertEqual(simplify(And([Not("X"), V("Y"), V("X")])), Fls())
+        self.assertEqual(simplify(And([V("X"), Not(V("X"))])), Fls())
+        self.assertEqual(simplify(And([Not(V("X")), V("Y"), V("X")])), Fls())
 
         st.stop()
         print st

@@ -68,7 +68,7 @@ print simplify(Not(Equiv(V("X"),V("Y")))) #razbije izraz na konjunkcije in disju
 ######################################################
 """
 
-from team5_sat_solver.sat_prevedbe.hadamard import hadamardova_matrika
+from team5_sat_solver.prevedba_hadamard import hadamardova_matrika
 
 #generacija logicne funkcije, katere resitev predstavlja hadamardovo matriko
 #funkcijo uporabimo tako, da kot parameter vnesemo zeljeno velicino matrike, algoritem pa nam bo nato vrnil logicno funkcijo
@@ -83,7 +83,7 @@ print h3
 print h4
 """"""""""""""
 """"""""""""""
-from team5_sat_solver.sat_prevedbe.coloring import barvanje
+from team5_sat_solver.prevedba_coloring import barvanje
 #Kot vhod podamo neusmerjen graf. Povezave med vozlisci predstavimo s pari npr. G = [(v1,v2), (v2,v5), (v2,v3), ...]
 #Potrebno je podati tudi stevilo barv
 #Metoda vrne logicno enacbo, katere resitev bo predstavljalo barvanje grafa,
@@ -93,7 +93,6 @@ G = [(V("a"),V("b")),(V("a"),V("c")),(V("c"),V("b"))] #trikotnik
 print barvanje(G,3)
 """""""""""
 """""""""""
-from team5_sat_solver.sat_prevedbe.sudoku import *
 #kot vhod podamo slovar (dictionary), kjer sta koordinati sudokuja predstavljeni kot dvoterica, vrednost pa predstavlja
 #znano vrednost sudokuja na tistem mestu
 #algoritem nato logicno enacbo katere resitev predstavlja resitev za dani sudoku.
@@ -116,7 +115,6 @@ sud = {(1,1):5,(1,2):3,(1,3):4,(1,4):6,(1,5):7,(1,6):8,(1,7):9,(1,8):1,(1,9):2,
 #################DPLL#########################
 ######################################################
 """
-from dpll import dpll
 #metoda prejme za parameter logicno formulo
 #metoda vrne resitev formule, ce je to mogoce
 #Opozorilo! Paziti moramo, da so negacije nahajo pri spremenljivkah! Potrebno je torej klicati metodo simplify preden
