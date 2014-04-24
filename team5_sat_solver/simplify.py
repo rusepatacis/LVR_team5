@@ -72,8 +72,11 @@ def simplify(formula, verbose=False):
                     if simplify(formula.formule[a]) == simplify(Not(formula.formule[b])):
                         return Tru()
 
+        formula = simplify_and_same(formula)
+        formula = simplify_or_same(formula)
+
         temp = []
-        for p in formula.formule:
+        for p in formula.formule:#vsako notranjo formulo je tudi potrebno preveriti
             p = simplify_and_same(p)
             p = simplify_or_same(p)
 
@@ -81,6 +84,7 @@ def simplify(formula, verbose=False):
                 temp.append(p)
         new = temp
         formula.formule = new
+
         if len(formula.formule) == 1:
             return formula.formule[0]
         else:
@@ -178,6 +182,9 @@ def simplify_and_same(formula):
             for form in formula.formule:
                 tmpFormula = simplify_and_same(form)
 
+                if tmpFormula.__class__.__name__ == 'V':
+                    temp.append(tmpFormula)
+                    continue
                 for form2 in tmpFormula.formule:
                     if form2 not in temp:
                         temp.append(form2)

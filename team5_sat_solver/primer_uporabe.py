@@ -48,7 +48,13 @@ Not(a1)     # Negacija izraza.
 #################Simplify#############################
 ######################################################
 """
-from simplify import simplify
-print simplify(Not(Not(a2)))
+from simplify import *
+print simplify(Not(Not(a2))) #brise dvojne negacije
+print simplify(Or([V("X"),Not(V("X"))])) #prepozna tavtologijo
+print simplify(And([V("X"),Not(V("X"))]))
+print simplify(And([V("X"),Tru()])) #pobrise nepotrebne spremenljivke
+print simplify(And([V("X"),V("X"),V("Y")])) #spremenljivke
+print simplify(And([V("X"),V("X"),V("Y"),Fls()]))
 
-#TODO ostali primeri (To bom ze js naredu, razn za sudoku, ce imas kako idejo kako naredit povej)
+t1 = Or([Or([V("X"), V("Y")]), Or([V("Y"), V("Z")])])
+print simplify(t1)

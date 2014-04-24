@@ -181,7 +181,7 @@ class MyTestCase(unittest.TestCase):
         had3 = XOR(Not(XOR(V("a1,1"), V("a1,2"))), Not(XOR(V("a2,1"), V("a2,2"))))
 
         print dpll(push_not(hh))
-        print dpll(push_not(had2))
+        print dpll(push_not(hadamardova_matrika(2)))
 
     def test_push_not(self):
         """
