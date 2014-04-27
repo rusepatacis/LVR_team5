@@ -19,7 +19,7 @@ def dpll(f, verbose=False):
 
     Klic
         f.vrednost(dpll(f)) bo vrnil True (ce je problem resljiv).
-    """
+    """""
     if verbose:
         print "Formula", f
 

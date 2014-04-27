@@ -12,7 +12,7 @@ def barvanje(G, b):
         G - neusmerjen graf, podan s seznamom povezav (dvojk, vozlišča so nizi),
         torej G = [(v1,v2), (v2,v5), (v2,v3), ...]
         b - želeno število barv
-    """
+    """""
     if not G or b <= 0:
         raise Exception("Preveri obliko vhodnega grafa in predznak števila barv!")
 

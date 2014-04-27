@@ -5,12 +5,12 @@ from operands import *
 
 
 def simplify(formula, verbose=False):
-    """
+    """"
     Metoda namenjena poenostavljanju logicnih izrazov.
     Kot parameter sprejme logicno formulo (izraz) ter ga poskusa poenostaviti. Deluje na rekurziven nacin.
     Zastavica verbose doloca izpis sledi funkcije.
     Vrne poenostavljeno fomrulo.
-    """
+    """""
     if verbose:
         print "\t\t", formula, formula.__class__
     if formula.__class__.__name__ in ('V', 'Fls', 'Tru'):
@@ -94,13 +94,13 @@ def simplify(formula, verbose=False):
 
 
 def simplify_or_same(formula):
-    """
+    """"
     Podmetoda metode simplify.
     Pokrajsa vgnezdene disjunkcije (Or).
     Npr: (X ali Y) ali (X ali Z) -> (X ali Y ali Z)
 
     Lahko resi tudi mesane izraze (konjunkcije in disjunkcije)
-    """
+    """""
     if formula.__class__.__name__ in ('V', 'Not'):
         return formula
 
@@ -144,14 +144,14 @@ def simplify_or_same(formula):
 
 
 def simplify_and_same(formula):
-    """
+    """"
     Podmetoda metode simplify.
     Pokrajsa vgnezdene konjunkcije (And).
 
     Npr: (X in Y) in (X in Z) -> (X in Y in Z)
 
     Lahko resi tudi mesane izraze (konjunkcije in disjunkcije)
-    """
+    """""
     if formula.__class__.__name__ in ('V', 'Not'):
         return formula
 
@@ -195,11 +195,11 @@ def simplify_and_same(formula):
 
 
 def simplify_not(formula):
-    """
+    """"
     Porine negacije navznoter do spremenljivk.
     Ta del metode dobi dobi celoten izraz (formulo), katero nato rekurzivno razcleni.
     Ce naleti na negacijo, porine ta del formule metodi "push not".
-    """
+    """""
     if formula.__class__.__name__ == 'Not':
         return push_not(formula.formula)
     elif formula.__class__.__name__ == 'V':
@@ -226,12 +226,12 @@ def simplify_not(formula):
 
 
 def push_not(formula):
-    """
+    """"
     Porine negacije navznoter do spremenljivk.
     Ta del metode predpostavi, da je prejsnji operand negacija. Glede na naslednji operand nato
     ustrezno porine negacijo navznoter, ter se rekurzivno klice naprej.
     Ce naleti na dvojno negacijo jo iznici (pokrajsa).
-    """
+    """""
     if formula.__class__.__name__ == 'V':
         return Not(formula)
     elif formula.__class__.__name__ == 'And':

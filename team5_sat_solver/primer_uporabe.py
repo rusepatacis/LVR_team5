@@ -8,7 +8,6 @@ __author__ = 'Jaka & Jani'
 """
 from operands import *
 
-
 # True
 Tru()
 # False
@@ -68,7 +67,7 @@ print simplify(Not(Equiv(V("X"),V("Y")))) #razbije izraz na konjunkcije in disju
 ######################################################
 """
 
-from team5_sat_solver.prevedba_hadamard import hadamardova_matrika
+from team5_sat_solver.sat_prevedbe.prevedba_hadamard import *
 
 #generacija logicne funkcije, katere resitev predstavlja hadamardovo matriko
 #funkcijo uporabimo tako, da kot parameter vnesemo zeljeno velicino matrike, algoritem pa nam bo nato vrnil logicno funkcijo
@@ -83,7 +82,7 @@ print h3
 print h4
 """"""""""""""
 """"""""""""""
-from prevedba_coloring import barvanje
+from team5_sat_solver.sat_prevedbe.prevedba_coloring import barvanje
 #Kot vhod podamo neusmerjen graf. Povezave med vozlisci predstavimo s pari npr. G = [(v1,v2), (v2,v5), (v2,v3), ...]
 #Potrebno je podati tudi stevilo barv
 #Metoda vrne logicno enacbo, katere resitev bo predstavljalo barvanje grafa,
@@ -112,7 +111,7 @@ sud = {(1,1):5,(1,2):3,(1,3):4,(1,4):6,(1,5):7,(1,6):8,(1,7):9,(1,8):1,(1,9):2,
 
 """
 ######################################################
-#################DPLL#########################
+#################DPLL################################
 ######################################################
 """
 #metoda prejme za parameter logicno formulo
@@ -146,4 +145,33 @@ petersen = [
     (1,3), (1,4), (2,5), (2,4), (3,5)
 ]
 
+"""
+######################################################
+#################UTILS################################
+######################################################
+"""
+#razred stoparica, ki nam na enostaven nacin omogoca merjenje ter primerjanje casa med razlicnimi metodami
+from utils import Stopwatch
 
+
+stoparica = Stopwatch("Primer uporabe") #kot parameter lahko podamo ime (tag)
+                                        #stoparica se avtomatsko zazene, ko jo ustvarimo
+stoparica.stop()                        #ustavimo jo s stop
+stoparica.restart()        #ko jo restartamo, pocisti vse prejsnje vrednosti
+hadamardova_matrika(8)
+stoparica.intermediate("Vmesni cas 10") #lahko dodamo vec vmesnih casov
+hadamardova_matrika(10)
+stoparica.intermediate("Vmesni cas 12")
+stoparica.stop("Skupaj")
+print stoparica                         #rezultat izpisemo tako, da stoparico enostavno izpisemo z print
+                                        #pri izpisu se vsak vmesni cas meri od prejsnjega vmesnega casa,
+                                        #TOTAL pa je razlika od (konec-start).
+
+#Primer uporabe
+st = Stopwatch("Optimizacija")
+hadamardova_matrikaOLD(8)
+st.intermediate("Old 10")
+hadamardova_matrika(8)
+st.intermediate("Optimized")
+st.stop()
+print st

@@ -5,7 +5,7 @@ from operands import *
 
 
 def X2SATsudoku(vhod):
-    """
+    """"
         vhod - slovar z vnosi ((i,j) -> stevilka), kjer je
             i indeks [1-9] vrstice v sudoku tabeli
             j indeks [1-9] stolpca v sudoku tabeli
@@ -13,7 +13,7 @@ def X2SATsudoku(vhod):
 
         Vrne formulo, ki ustreza prevedbi sudokuja na problem SAT.
         Vsebuje spremenljivke oblike Xijk, ki oznacujejo resnicnost izjav: na mestu (i,j) je stevilo k
-    """
+    """""
     # Pogoji za veljavnost vnosov v vrsticah.
     temp_vrstica = []
     for i in range(1,10):
