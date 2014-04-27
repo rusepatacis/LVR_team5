@@ -4,11 +4,13 @@ __author__ = 'Jani'
 import unittest
 
 from dpll import dpll
+from cnf import convert_to_CNF
 from team5_sat_solver.sat_prevedbe.prevedba_hadamard import hadamardova_matrika, hadamard_simplifed
 from operands import *
 from simplify import simplify_not, simplify, simplify_and_same, simplify_or_same
 from utils import Stopwatch
 
+from cnf2 import *
 
 class MyTestCase(unittest.TestCase):
     """
@@ -148,6 +150,27 @@ class MyTestCase(unittest.TestCase):
 
         st.stop()
         #print st
+
+    def test_kombinacije(self):
+        b = [[1,2],["x","y"],["a","b","c"],[9,8,7]]
+        print kombinacije(b)
+
+    def test_cnf2(self):
+
+        f0 = Or([V(1),And([V(2),V(3)])])
+        f0 = Or([V(1),And([V(2),Or([V(3),Or([V(4),And([V(5),V(6)])])])])])
+        print convertToCNF(f0)
+
+    def test_cnf(self):
+        f0 = Or([V(1), V(2), And([V(3), V(4), Or([V(5),V(6),Or([V(7),And([V(8),V(9)])])])])])
+        f0 = Or([V(1),And([V(2),Or([V(3),Or([V(4),And([V(5),V(6)])])])])])
+        f0 = simplify_not(hadamardova_matrika(2))
+
+        print f0
+        f0 = convert_to_CNF(f0)
+        print f0
+        print convert_to_CNF(f0)
+        print dpll(f0)
 
     def test_dpll(self):
         """

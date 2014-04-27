@@ -6,9 +6,9 @@ from simplify import simplify
 
 
 def only_literals(p):
-    """"
+    """
     Vrne True, ce so v formuli p samo literali (in ne dodatni operatorji). Sicer False.
-    """""
+    """
     # Loceno preverimo Not
     if isinstance(p, Not):
         return isinstance(p.formula, V)
@@ -23,19 +23,19 @@ def only_literals(p):
 
 
 def is_CNF_clause(p):
-    """"
+    """
     Vrne True, ce je formula p CNF stavek (disjunkcija literalov). Sicer False.
 
     Ce imamo disjunkcijo, ki ima notri samo literale ali negirane literale, jo lahko porabimo za CNF.
     Konjukcija takih disjunkcij je CNF.
-    """""
+    """
     return isinstance(p, Or) and only_literals(p)
 
 
 def is_CNF_formula(p):
-    """"
+    """
     Vrne true ce je formula p v CNF obliki,
-    """""
+    """
     # Imeti moramo konjunkcijo...
     if isinstance(p, And):
         # ... samih disjunkctnih stavkov
@@ -48,13 +48,13 @@ def is_CNF_formula(p):
 
 
 def convert_to_CNF(p, verbose=False):
-    """"
+    """
     Pretvorba formule v CNF.
     p - formula za pretvorbo
     verbose - zastavica za izpis poteka funkcije
 
     Vrne formulo p v CNF obliki.
-    """""
+    """
     def convert_nnf_to_CNF(cs, verbose=False):
         if isinstance(cs, Tru):
             if verbose:
