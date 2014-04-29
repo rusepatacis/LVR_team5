@@ -44,8 +44,17 @@ def kombinacijeGenerator(comb,f):
         if not comb:
             return f
         for j in comb:
+            if isinstance(i,Or): #s tem preprecimo vgnezdene Or stavke
+                i = i.formule
+
             if type(j) == list:
-                tempComb.append(j+[i])
+                if type(i) == list:
+                    tempComb.append(j+i)
+                else:
+                    tempComb.append(j+[i])
             else:
-                tempComb.append([j,i])
+                if type(i) == list:
+                    tempComb.append([j]+i)
+                else:
+                    tempComb.append([j,i])
     return tempComb

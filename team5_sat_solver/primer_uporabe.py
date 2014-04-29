@@ -119,7 +119,8 @@ sud = {(1,1):5,(1,2):3,(1,3):4,(1,4):6,(1,5):7,(1,6):8,(1,7):9,(1,8):1,(1,9):2,
 #Opozorilo! Paziti moramo, da so negacije nahajo pri spremenljivkah! Potrebno je torej klicati metodo simplify preden
 #vsavimo formulo v dpll.
 
-"""
+from dpll import dpll
+
 
 f1 = And([V("X"), V("Y")]) #TODO to tuki crasha v unit testu pa deluje :S
 dpll(f1)
@@ -136,7 +137,7 @@ f2 = (Or([And([XOR(V("a1,1"),V("a2,1")),Not(XOR(V("a1,2"),V("a2,2")))]),
 #print dpll(hadamard_simplifed(f2)) #hadamarova matrika stopnje 2
 #WTF, to v unit testu deluje, tukaj pa crasha :S
 
-"""
+
 
 
 petersen = [

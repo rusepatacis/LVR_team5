@@ -152,25 +152,20 @@ class MyTestCase(unittest.TestCase):
         #print st
 
     def test_kombinacije(self):
-        b = [[1,2],["x","y"],["a","b","c"],[9,8,7]]
-        print kombinacije(b)
+        a = [Or([1]),Or([2,3])]
+        self.assertEqual(kombinacije(a),[[1,2], [1,3]])
+        b = [Or([1,"a"]),Or([2,3])]
+        self.assertEqual(kombinacije(b),[[1, 2], ['a', 2], [1, 3], ['a', 3]])
+        c = [Or(["a","b"]),Or([1]),Or([".",",","-"])]
+        self.assertEqual(kombinacije(c),[['a', 1, '.'], ['b', 1, '.'], ['a', 1, ','], ['b', 1, ','], ['a', 1, '-'], ['b', 1, '-']])
 
     def test_cnf2(self):
-
         f0 = Or([V(1),And([V(2),V(3)])])
+        self.assertEqual(convertToCNF(f0),"((1 [OR] 2) [AND] (1 [OR] 3))")
         f0 = Or([V(1),And([V(2),Or([V(3),Or([V(4),And([V(5),V(6)])])])])])
-        print convertToCNF(f0)
-
-    def test_cnf(self):
+        self.assertEqual(convertToCNF(f0),"((1 [OR] 2) [AND] (1 [OR] 3 [OR] 4 [OR] 5) [AND] (1 [OR] 3 [OR] 4 [OR] 6))")
         f0 = Or([V(1), V(2), And([V(3), V(4), Or([V(5),V(6),Or([V(7),And([V(8),V(9)])])])])])
-        f0 = Or([V(1),And([V(2),Or([V(3),Or([V(4),And([V(5),V(6)])])])])])
-        f0 = simplify_not(hadamardova_matrika(2))
-
-        print f0
-        f0 = convert_to_CNF(f0)
-        print f0
-        print convert_to_CNF(f0)
-        print dpll(f0)
+        self.assertEqual(convertToCNF(f0),"((1 [OR] 2 [OR] 3) [AND] (1 [OR] 2 [OR] 4) [AND] (1 [OR] 2 [OR] 5 [OR] 6 [OR] 7 [OR] 8) [AND] (1 [OR] 2 [OR] 5 [OR] 6 [OR] 7 [OR] 9))")
 
     def test_dpll(self):
         """
