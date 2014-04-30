@@ -25,8 +25,6 @@ def barvanje(G, b):
     spremenljivke = dict(((v, k), V('%s%d' % (v, k))) for v in vozlisca for k in barve)
 
     # Vsako vozlišče je pobarvano z vsaj eno barvno.
-    #vsaj_ena_barva = And([[Or([spremenljivke[(v, k)]]) for k in barve] for v in vozlisca])
-
     vsaj_ena_barva = []
     for v in vozlisca:
         tmp = []
@@ -43,8 +41,6 @@ def barvanje(G, b):
 
 
     # Povezani vozlišči nista iste barve.
-    #povezani_nista_iste = And([[Not(And([spremenljivke[(vi, k)], spremenljivke[(vj, k)]])) for k in barve]
-    #                           for (vi, vj) in G])
     povezani_nista_iste = []
     for (vi,vj) in G:
         tmp = []

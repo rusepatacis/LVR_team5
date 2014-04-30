@@ -26,3 +26,6 @@ Glej **primeri_uporabe.py. Na kratko: gradimo poljuben izraz  z operands ali pa 
 
 ###UnitTests
 Datoteka UnitTests je sestavljena iz vec metod (testov), ki testirajo razlicne aspekte programa. Najlazje je teste poganjati v pycharmu, saj nam to lepo izpise teste ter meri njihov cas izvajanja. To naredimo enostavno tako, da kliknemo izven metode z desnim gumbom in pozenemo "Run Unittests in Mytestcase" (opomba. nastavljen moramo imeti interpreter za python, drugace ni tele opcije). Ce zelimo pognati, samo dolocen test (metodo) kliknemo z desnim gumbom na metodo ter jo pozenemo.
+
+###Opomba
+Problem sudokuja, je prevelik, da bi ga nas dpll resil v normalnem casu. Formula, ki jo zgeneriramo je pravilna in ustreza resitvi sudokuja. Ce nam ne verjamete jo testirajte na roke ;).

@@ -59,7 +59,6 @@ def dpll(f, verbose=False):
     def dpll_aux(v, cs, verbose=False):
 
         # Slovar spremenljivk, katerih vrednosti še ne poznamo
-        #neznane_vrednosti = set(v for stavek in cs for v in stavek.formule)
         neznane_vrednosti = set()
         for stavek in cs:
             for i in stavek.formule:
@@ -127,25 +126,27 @@ def dpll(f, verbose=False):
         if not cs:
             return v
 
-        # cs sedaj ni prazen
-        # se vedno imamo stavke za obdelavo, a trenutno nimamo dodatnega znanja
-        # zato izberemo xi in preizkusimo xi = Fls in xi = Tru
+        #se enkrat preverimo katere vrednosti smo resili
         neznane_vrednosti = set()
         for stavek in cs:
             for i in stavek.formule:
                 if i not in v:
                     neznane_vrednosti.add(i)
+
+        # cs sedaj ni prazen
+        # se vedno imamo stavke za obdelavo, a trenutno nimamo dodatnega znanja
+        # zato izberemo xi in preizkusimo xi = Fls in xi = Tru
         if not neznane_vrednosti:
             return False
         else:
             xi = neznane_vrednosti.pop()
-            xiN = simplify_not(Not(xi))
+            xiN = simplify_not(Not(xi))#ce postavimo X= Tru, s tem povemo tudi da Not(X) = Fls
             if xiN in neznane_vrednosti:
                 neznane_vrednosti.remove(xiN)
             v[xi] = Fls()
             v[xiN] = Tru()
             v1 = dpll_aux(v, cs, verbose)
-            if not v1:
+            if not v1:#ce zgornja moznost nima resitve, zamenjamo vrednosti in poskusimo znova
                 v[xi] = Tru()
                 v[xiN] = Fls()
                 return dpll_aux(v, cs, verbose)

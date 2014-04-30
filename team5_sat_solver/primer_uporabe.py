@@ -133,7 +133,7 @@ print dpll(And([XOR(V("X"),V("Y")),Or([V("X"),V("Y")])]))
 
 G = [(V("a"),V("b"))]
 print "Barvanje",dpll(barvanje(G,2))
-print "Hadamard 2",dpll(hadamardova_matrika(2))
+print "Hadamard 2",dpll(hadamardova_matrika(2)) #hadamardovo za 4 ne resi v normalnem casu
 
 petersen = [
     (6,7), (7,8), (8,9), (9,10), (10,6),
@@ -141,7 +141,10 @@ petersen = [
     (1,3), (1,4), (2,5), (2,4), (3,5)
 ]
 
-print "Peteresen", dpll(barvanje(petersen,3))
+print "Petersen 2", dpll(barvanje(petersen,2))
+print "Petersen 3", dpll(barvanje(petersen,3)) #Lepo za preverit na roke :)
+
+#print "Sudoku dpll",dpll(X2SATsudoku(sud)) #opomba, tega ne premelje skozi v normalnem casu
 
 """
 ######################################################
@@ -171,5 +174,7 @@ hadamardova_matrikaOLD(8)
 st.intermediate("Old 10")
 hadamardova_matrika(8)
 st.intermediate("Optimized")
+dpll(barvanje(petersen,3))
+st.intermediate("Petersen")
 st.stop()
 print st

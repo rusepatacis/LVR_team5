@@ -22,23 +22,23 @@ def X2SATsudoku(vhod):
                     if (i,a) in vhod:
                         if vhod[(i,a)] == k:
                             temp_vrstica.append(XOR(
-                                Tru,
+                                Tru(),
                                 V('X'+str(i)+str(b)+str(k))
                             ))
                         else:
                             temp_vrstica.append(XOR(
-                                False,
+                                Fls(),
                                 V('X'+str(i)+str(b)+str(k))
                             ))
                     elif (i,b) in vhod:
                         if vhod[(i,b)] == k:
                             temp_vrstica.append(XOR(
-                                Tru,
+                                Tru(),
                                 V('X'+str(i)+str(b)+str(k))
                             ))
                         else:
                             temp_vrstica.append(XOR(
-                                False,
+                                Fls(),
                                 V('X'+str(i)+str(b)+str(k))
                             ))
                     else:
