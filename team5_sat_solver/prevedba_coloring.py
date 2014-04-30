@@ -22,7 +22,7 @@ def barvanje(G, b):
     vozlisca = list(set([u for (u, v) in G] + [v for (u, v) in G]))
 
     # Za lazje delo vozlisca shranimo v slovar oblike (ime_vozlisca, barva) -> pripadajoca spremenljivka.
-    spremenljivke = dict(((v, k), V('C%s%d' % (v, k))) for v in vozlisca for k in barve)
+    spremenljivke = dict(((v, k), V('%s%d' % (v, k))) for v in vozlisca for k in barve)
 
     # Vsako vozlišče je pobarvano z vsaj eno barvno.
     #vsaj_ena_barva = And([[Or([spremenljivke[(v, k)]]) for k in barve] for v in vozlisca])
@@ -46,13 +46,14 @@ def barvanje(G, b):
     #povezani_nista_iste = And([[Not(And([spremenljivke[(vi, k)], spremenljivke[(vj, k)]])) for k in barve]
     #                           for (vi, vj) in G])
     povezani_nista_iste = []
-    for k in barve:
+    for (vi,vj) in G:
         tmp = []
-        for (vi,vj) in G:
-            tmp.append(XOR(spremenljivke[(vi,k)],spremenljivke[(vj,k)]))
+        for k in barve:
+            tmp.append(Or([Not(spremenljivke[(vi,k)]), Not(spremenljivke[(vj,k)])]))
         povezani_nista_iste.append(And(tmp))
     povezani_nista_iste = And(povezani_nista_iste)
 
 
     # Prevedba je konjunkcija pogojev.
     return And([vsaj_ena_barva, nobeno_dvakrat, povezani_nista_iste])
+    #return vsaj_ena_barva,nobeno_dvakrat,povezani_nista_iste

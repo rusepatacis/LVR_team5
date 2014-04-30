@@ -173,6 +173,7 @@ class MyTestCase(unittest.TestCase):
         f3 = And([V("X"), Not(V("X"))])
         f4 = Not(XOR(V("X"), V("Y")))
         f5 = Not(And([V("X"), V("Y")]))
+        f6 = XOR(V("X"),V("Y"))
 
         # Robni primeri DPLL.
         self.assertEqual(dpll(V("X")), {"X": "Tru"})
@@ -181,10 +182,11 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(dpll(Tru()), True)
 
         self.assertEqual(dpll(f1), {"X": "Tru", "Y": "Tru"})
-        self.assertEqual(dpll(f2), {'a': "Tru", 'c': "Tru", 'b': "Tru", 'q': "Tru", 'p': "Fls", 'r': "Fls"})
+        self.assertEqual(dpll(f2), {'a': Fls(), 'c': Tru(), 'b': Fls(), 'q': Fls(), 'p': Fls(), 'r': Tru()})
         self.assertEqual(dpll(f3), False)
-        self.assertEqual(dpll(f4), {'Y': "Tru", 'X': "Tru"})
+        self.assertEqual(dpll(f4), {'Y': Fls(), 'X': Fls()})
         self.assertEqual(dpll(f5), {'Y': "Fls", 'X': "Fls"})
+        self.assertEqual(dpll(f6), {'Y': Fls(), 'X': Tru()})
 
 
 
@@ -208,20 +210,14 @@ class MyTestCase(unittest.TestCase):
 
     def test_barvanje(self):
         G = [(V("a"),V("b"))]
-        f1 = And([XOR(V("a1"),V("b1")), XOR(V("a2"),V("b2"))])
-        print "test",dpll(f1)
-        f1 = And([Not(And([V("a1"),V("a2")])),Not(And([V("b1"),V("b2")]))])
-        print f1
-        print dpll(f1)
-        f2 = And([And([XOR(V("a1"),V("b1")), XOR(V("a2"),V("b2"))]),
-                  And([Not(And([V("a1"),V("a2")])), Not(And([V("b1"),V("b2")]))]),
-                  And([Or([V("a1"),V("a2")]), Or([V("b1"),V("b2")])])
-        ])
-        print "bb",dpll(f2)
-        print "----------"
-        f = barvanje(G,2)
-        print f
-        print dpll(f)
+        self.assertEqual(dpll(barvanje(G,2)),{'a1': Fls(), 'a2': Tru(), 'b1': Tru(), 'b2': Fls()})
+        G = [(V("a"),V("b")),(V("a"),V("c"))]
+        self.assertEqual(dpll(barvanje(G,2)),{'a1': Tru(), 'a2': Fls(), 'b1': Fls(), 'b2': Tru(), 'c2': Tru(), 'c1': Fls()})
+        G = [(V("a"),V("b")),(V("a"),V("c")),(V("a"),V("d"))]
+        self.assertEqual(dpll(barvanje(G,2)),{'a2': Fls(), 'a1': Tru(), 'c1': Fls(), 'c2': Tru(), 'b2': Tru(), 'b1': Fls(), 'd1': Fls(), 'd2': Tru()})
+        G = [(V("a"),V("b")),(V("a"),V("c")),(V("c"),V("b"))]
+        self.assertEqual(dpll(barvanje(G,2)),False)
+        self.assertEqual(dpll(barvanje(G,3)),{'a1': Tru(), 'a3': Fls(), 'a2': Fls(), 'b1': Fls(), 'b2': Tru(), 'b3': Fls(), 'c3': Tru(), 'c2': Fls(), 'c1': Fls()})
 
 if __name__ == '__main__':
     unittest.main()

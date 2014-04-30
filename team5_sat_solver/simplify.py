@@ -221,7 +221,7 @@ def simplify_not(formula):
     elif formula.__class__.__name__ == 'XOR':
         return XOR(simplify_not(formula.p), simplify_not(formula.q))
 
-    print "Unknown operator"
+    #print "Unknown operator"
     return formula
 
 

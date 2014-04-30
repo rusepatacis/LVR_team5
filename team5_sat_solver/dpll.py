@@ -59,7 +59,14 @@ def dpll(f, verbose=False):
     def dpll_aux(v, cs, verbose=False):
 
         # Slovar spremenljivk, katerih vrednosti še ne poznamo
-        neznane_vrednosti = set(v for stavek in cs for v in stavek.formule)
+        #neznane_vrednosti = set(v for stavek in cs for v in stavek.formule)
+        neznane_vrednosti = set()
+        for stavek in cs:
+            for i in stavek.formule:
+                if i not in v:
+                    neznane_vrednosti.add(i)
+
+
         if verbose:
             print "Nezanane vrednosti", sorted(list(neznane_vrednosti))
 
@@ -76,8 +83,11 @@ def dpll(f, verbose=False):
             # znamo nastaviti xi
             if len(stavek.formule) == 1:
                 lit = stavek.formule[0]
-                if isinstance(lit, V) or isinstance(lit, Not):
+                if lit in v and v[lit] == Fls():
+                    return False
+                elif isinstance(lit, V) or isinstance(lit, Not):
                     v[lit] = Tru()
+                    v[simplify_not(Not(lit))] = Fls()
                 else:
                     raise TypeError
                 # Take stavke odstranimo
@@ -120,14 +130,24 @@ def dpll(f, verbose=False):
         # cs sedaj ni prazen
         # se vedno imamo stavke za obdelavo, a trenutno nimamo dodatnega znanja
         # zato izberemo xi in preizkusimo xi = Fls in xi = Tru
+        neznane_vrednosti = set()
+        for stavek in cs:
+            for i in stavek.formule:
+                if i not in v:
+                    neznane_vrednosti.add(i)
         if not neznane_vrednosti:
             return False
         else:
             xi = neznane_vrednosti.pop()
-            v[xi] = Tru()
+            xiN = simplify_not(Not(xi))
+            if xiN in neznane_vrednosti:
+                neznane_vrednosti.remove(xiN)
+            v[xi] = Fls()
+            v[xiN] = Tru()
             v1 = dpll_aux(v, cs, verbose)
             if not v1:
-                v[xi] = Fls()
+                v[xi] = Tru()
+                v[xiN] = Fls()
                 return dpll_aux(v, cs, verbose)
             else:
                 return v1
@@ -139,6 +159,7 @@ def dpll(f, verbose=False):
         for var in set(v for stavek in cs for v in stavek.formule):
             if var not in v:
                 v[var] = Fls()
+                v[simplify_not(Not(var))] = Tru()
 
         # Pocistimo negacije, pretvorimo v slovar stringov (ki so imena spremenljivk).
         v_final = {}

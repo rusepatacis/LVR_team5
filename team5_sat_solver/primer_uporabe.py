@@ -135,14 +135,13 @@ G = [(V("a"),V("b"))]
 print "Barvanje",dpll(barvanje(G,2))
 print "Hadamard 2",dpll(hadamardova_matrika(2))
 
-
-
-
 petersen = [
     (6,7), (7,8), (8,9), (9,10), (10,6),
     (10,5), (6,1), (2,7), (3,8), (4,9),
     (1,3), (1,4), (2,5), (2,4), (3,5)
 ]
+
+print "Peteresen", dpll(barvanje(petersen,3))
 
 """
 ######################################################
