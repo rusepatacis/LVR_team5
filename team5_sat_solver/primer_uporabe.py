@@ -67,31 +67,36 @@ print simplify(Not(Equiv(V("X"),V("Y")))) #razbije izraz na konjunkcije in disju
 ######################################################
 """
 
-from team5_sat_solver.sat_prevedbe.prevedba_hadamard import *
-
+from prevedba_hadamard import *
+"""
+Hadamardova matrika
+"""
 #generacija logicne funkcije, katere resitev predstavlja hadamardovo matriko
 #funkcijo uporabimo tako, da kot parameter vnesemo zeljeno velicino matrike, algoritem pa nam bo nato vrnil logicno funkcijo
 #katere resitev bo predstavljala hadamardovo matriko.
 h2 = hadamardova_matrika(2)
-h3 = hadamardova_matrika(3)
+h3 = hadamardova_matrika(3)#opomba, ne uporabi hadamarda za n > 2, razen ce imas 4 dni casa
 h4 = hadamardova_matrika(4)
 h8 = hadamardova_matrika(8)
 
 print h2
 print h3
 print h4
-""""""""""""""
-""""""""""""""
-from team5_sat_solver.sat_prevedbe.prevedba_coloring import barvanje
+"""
+Barvanje
+"""
+from prevedba_coloring import barvanje
 #Kot vhod podamo neusmerjen graf. Povezave med vozlisci predstavimo s pari npr. G = [(v1,v2), (v2,v5), (v2,v3), ...]
 #Potrebno je podati tudi stevilo barv
 #Metoda vrne logicno enacbo, katere resitev bo predstavljalo barvanje grafa,
 #ce enacba ni resljiva, graf ni obarljiv s podanim stevilom barv.
 
 G = [(V("a"),V("b")),(V("a"),V("c")),(V("c"),V("b"))] #trikotnik
-print barvanje(G,3)
+print "Barvanje", barvanje(G,3)
 """""""""""
+Sudoku
 """""""""""
+from prevedba_sudoku import X2SATsudoku
 #kot vhod podamo slovar (dictionary), kjer sta koordinati sudokuja predstavljeni kot dvoterica, vrednost pa predstavlja
 #znano vrednost sudokuja na tistem mestu
 #algoritem nato logicno enacbo katere resitev predstavlja resitev za dani sudoku.
@@ -107,7 +112,7 @@ sud = {(1,1):5,(1,2):3,(1,3):4,(1,4):6,(1,5):7,(1,6):8,(1,7):9,(1,8):1,(1,9):2,
         (8,1):2,(8,2):8,(8,3):7,(8,4):4,(8,5):1,(8,6):9,(8,7):6,(8,8):3,(8,9):5,
         (9,1):3,(9,2):4,(9,3):5,(9,4):2,(9,5):8,(9,6):6,(9,7):1,(9,8):7,(9,9):9}
 
-#print X2SATsudoku(sud) #TODO zakaj tole ne dela?
+print "Sudoku",X2SATsudoku(sud)
 
 """
 ######################################################
@@ -121,21 +126,14 @@ sud = {(1,1):5,(1,2):3,(1,3):4,(1,4):6,(1,5):7,(1,6):8,(1,7):9,(1,8):1,(1,9):2,
 
 from dpll import dpll
 
-
-f1 = And([V("X"), V("Y")]) #TODO to tuki crasha v unit testu pa deluje :S
-dpll(f1)
-
-#print dpll(V("X"))
+print dpll(V("X"))
 print dpll(And([V("X"), V("Y")]))
-print dpll(And([XOR(V("X",V("Y"))),Or([V("X"),V("Y")])]))
+print dpll(And([XOR(V("X"),V("Y")),Or([V("X"),V("Y")])]))
 
 
-
-f2 = (Or([And([XOR(V("a1,1"),V("a2,1")),Not(XOR(V("a1,2"),V("a2,2")))]),
-                 And([Not(XOR(V("a1,1"),V("a2,1"))),XOR(V("a1,2"),V("a2,2"))])]))
-
-#print dpll(hadamard_simplifed(f2)) #hadamarova matrika stopnje 2
-#WTF, to v unit testu deluje, tukaj pa crasha :S
+G = [(V("a"),V("b"))]
+print "Barvanje",dpll(barvanje(G,2))
+print "Hadamard 2",dpll(hadamardova_matrika(2))
 
 
 

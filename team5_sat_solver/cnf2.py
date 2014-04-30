@@ -4,16 +4,14 @@ from operands import *
 from simplify import *
 
 def convertToCNF(f):
-    if isinstance(f, V):
+    if isinstance(f,(V,Not,Tru,Fls)):
         return f
-    if isinstance(f,Not):
-        return f
-    if isinstance(f,And):
+    if isinstance(f, And):
         combined = []
         for p in f.formule:
             combined.append(convertToCNF(p))
         return simplify(And(combined))
-    if isinstance(f,Or):
+    if isinstance(f, Or):
         combined = []
         for p in f.formule:
             combined.append(convertToCNF(p))

@@ -3,7 +3,7 @@ __author__ = 'Jaka & Jani'
 
 import itertools
 from operands import *
-from simplify import push_not
+from simplify import simplify_not
 
 def hadamardova_matrika(n):
     """"
@@ -11,7 +11,7 @@ def hadamardova_matrika(n):
     Vrne logicno funkcijo, katere resitev (ce obstaja) je hadamardova matrika.
     """""
     if n % 2 == 1:
-        return Fls
+        return Fls()
     n += 1   # Ker stejemo indekse matrike od 1 naprej.
     matrika = {}
     for i in range(1, n):    # Stolpec
@@ -50,7 +50,7 @@ def hadamard_simplifed(n):
     """
     Vrne izraz primeren za vhod v DPLL.
     """
-    return push_not(hadamardova_matrika(n))
+    return simplify_not(hadamardova_matrika(n))
 
 """
 Iskanje hadamardove matrike stopnje n.

@@ -3,7 +3,9 @@ __author__ = 'Jaka & Jani'
 
 """ Modul, ki vsebuje algoritem DPLL. """
 
+from cnf2 import convertToCNF
 from cnf import convert_to_CNF
+from simplify import *
 from operands import *
 
 
@@ -28,13 +30,18 @@ def dpll(f, verbose=False):
         return False
 
     # Pretvori v CNF
-    cnf_f = convert_to_CNF(f)
+    f = convertToCNF(simplify_not(simplify(f))) #spremeni formulo v CNF obliko
+    cnf_f = convert_to_CNF(f) #tole nam se dodatno pokrajsa formule (x in ne x), najbol poglavitno pa
+                            #nastavi formulo v tako obliko da jo dpll prebavi.
+
     if verbose:
         print "CNF____", cnf_f
 
     # Primer tavtologije
     if isinstance(cnf_f, Tru):
         return True
+    if isinstance(cnf_f,Fls):
+        return False
 
     # Primer prazne formule
     if not cnf_f.formule:
