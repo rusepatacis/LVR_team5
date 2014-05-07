@@ -76,7 +76,7 @@ def simplify(formula, verbose=False):
         formula = simplify_or_same(formula)
 
         temp = []
-        for p in formula.formule:#vsako notranjo formulo je tudi potrebno preveriti
+        for p in formula.formule:   # Vsako notranjo formulo je tudi potrebno preveriti.
             p = simplify_and_same(p)
             p = simplify_or_same(p)
 
