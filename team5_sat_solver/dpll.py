@@ -3,7 +3,6 @@ __author__ = 'Jaka & Jani'
 
 """ Modul, ki vsebuje algoritem DPLL. """
 
-from cnf2 import convertToCNF
 from cnf import convert_to_CNF
 from simplify import *
 from operands import *
@@ -30,9 +29,7 @@ def dpll(f, verbose=False):
         return False
 
     # Pretvori v CNF
-    f = convertToCNF(simplify_not(simplify(f))) #spremeni formulo v CNF obliko
-    cnf_f = convert_to_CNF(f) #tole nam se dodatno pokrajsa formule (x in ne x), najbol poglavitno pa
-                            #nastavi formulo v tako obliko da jo dpll prebavi.
+    cnf_f = convert_to_CNF(f)
 
     if verbose:
         print "CNF____", cnf_f
@@ -40,7 +37,7 @@ def dpll(f, verbose=False):
     # Primer tavtologije
     if isinstance(cnf_f, Tru):
         return True
-    if isinstance(cnf_f,Fls):
+    if isinstance(cnf_f, Fls):
         return False
 
     # Primer prazne formule
@@ -64,7 +61,6 @@ def dpll(f, verbose=False):
             for i in stavek.formule:
                 if i not in v:
                     neznane_vrednosti.add(i)
-
 
         if verbose:
             print "Nezanane vrednosti", sorted(list(neznane_vrednosti))
@@ -140,13 +136,13 @@ def dpll(f, verbose=False):
             return False
         else:
             xi = neznane_vrednosti.pop()
-            xiN = simplify_not(Not(xi))#ce postavimo X= Tru, s tem povemo tudi da Not(X) = Fls
+            xiN = simplify_not(Not(xi))     # Ce postavimo X= Tru, s tem povemo tudi da Not(X) = Fls.
             if xiN in neznane_vrednosti:
                 neznane_vrednosti.remove(xiN)
             v[xi] = Fls()
             v[xiN] = Tru()
             v1 = dpll_aux(v, cs, verbose)
-            if not v1:#ce zgornja moznost nima resitve, zamenjamo vrednosti in poskusimo znova
+            if not v1:  # Ce zgornja moznost nima resitve, zamenjamo vrednosti in poskusimo znova.
                 v[xi] = Tru()
                 v[xiN] = Fls()
                 return dpll_aux(v, cs, verbose)

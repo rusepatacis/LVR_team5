@@ -6,8 +6,9 @@ import unittest
 from dpll import dpll
 from prevedba_hadamard import hadamardova_matrika
 from utils import Stopwatch
-from cnf2 import *
+from cnf import *
 from prevedba_coloring import barvanje
+from simplify import simplify, simplify_not, simplify_or_same, simplify_and_same
 
 class MyTestCase(unittest.TestCase):
     """
@@ -158,11 +159,11 @@ class MyTestCase(unittest.TestCase):
 
     def test_cnf2(self):
         f0 = Or([V(1),And([V(2),V(3)])])
-        self.assertEqual(convertToCNF(f0),"((1 [OR] 2) [AND] (1 [OR] 3))")
+        self.assertEqual(convert_to_CNF(f0),"((1 [OR] 2) [AND] (1 [OR] 3))")
         f0 = Or([V(1),And([V(2),Or([V(3),Or([V(4),And([V(5),V(6)])])])])])
-        self.assertEqual(convertToCNF(f0),"((1 [OR] 2) [AND] (1 [OR] 3 [OR] 4 [OR] 5) [AND] (1 [OR] 3 [OR] 4 [OR] 6))")
+        self.assertEqual(convert_to_CNF(f0),"((1 [OR] 2) [AND] (1 [OR] 3 [OR] 4 [OR] 5) [AND] (1 [OR] 3 [OR] 4 [OR] 6))")
         f0 = Or([V(1), V(2), And([V(3), V(4), Or([V(5),V(6),Or([V(7),And([V(8),V(9)])])])])])
-        self.assertEqual(convertToCNF(f0),"((1 [OR] 2 [OR] 3) [AND] (1 [OR] 2 [OR] 4) [AND] (1 [OR] 2 [OR] 5 [OR] 6 [OR] 7 [OR] 8) [AND] (1 [OR] 2 [OR] 5 [OR] 6 [OR] 7 [OR] 9))")
+        self.assertEqual(convert_to_CNF(f0),"((1 [OR] 2 [OR] 3) [AND] (1 [OR] 2 [OR] 4) [AND] (1 [OR] 2 [OR] 5 [OR] 6 [OR] 7 [OR] 8) [AND] (1 [OR] 2 [OR] 5 [OR] 6 [OR] 7 [OR] 9))")
 
     def test_dpll(self):
         """

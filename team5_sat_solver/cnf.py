@@ -2,7 +2,7 @@ __author__ = 'Jaka & Jani'
 #coding: UTF-8
 
 from operands import *
-from simplify import simplify
+from simplify import simplify, simplify_not
 
 
 def only_literals(p):
@@ -59,7 +59,34 @@ def convert_to_CNF(p, verbose=False):
 
     Vrne formulo p v CNF obliki.
     """
-    def convert_nnf_to_CNF(cs, verbose=False):
+    def convert_to_cnf_aux(f):
+        """
+        Prevede funkcijo v CNF obliko.
+        Kot vhod prejme funkcijo. Funkcija mora biti v primerni obliki (negacije
+        so lahko le pred spremenljivkami).
+        """
+        if isinstance(f, (V, Not, Tru, Fls)):
+            return f
+        if isinstance(f, And):
+            combined = []   # Ze v cnf obliki, samo zdruzimo skupaj posamezne konjunkcije.
+            for p in f.formule:
+                combined.append(convert_to_cnf_aux(p))
+            return simplify(And(combined))
+        if isinstance(f, Or):
+            combined = []   # Moramo pretvoriti v CNF.
+            for p in f.formule:
+                combined.append(convert_to_cnf_aux(p))
+            # Pretvorimo tako, da naredimo vse mozne kombinacije med konjunkcijo in disjunkcijo.
+            combined = kombinacije(combined)
+            comb2 = []
+            for p in combined:
+                comb2.append(Or(p))
+            return And(comb2)
+
+    def simp_cnf(cs, verbose=False):
+        """
+        Nadaljnje poenostavljanje.
+        """
         if isinstance(cs, Tru):
             if verbose:
                 print "Tru", cs
@@ -79,7 +106,7 @@ def convert_to_CNF(p, verbose=False):
         if isinstance(cs, And):
             if verbose:
                 print "And", cs
-            return splosci(And([convert_nnf_to_CNF(term, verbose) for term in cs.formule]))
+            return splosci(And([simp_cnf(term, verbose) for term in cs.formule]))
         if isinstance(cs, Or):
             if not cs.formule:
                 if verbose:
@@ -88,7 +115,7 @@ def convert_to_CNF(p, verbose=False):
             elif len(cs.formule) == 1:
                 if verbose:
                     print "Or 1", cs
-                return splosci(convert_nnf_to_CNF(cs.formule[0]))
+                return splosci(simp_cnf(cs.formule[0]))
             else:
                 if verbose:
                     print "Or > 2", cs
@@ -102,14 +129,18 @@ def convert_to_CNF(p, verbose=False):
                 if not konj:
                     return splosci(Or(ostalo))
                 else:
-                    return splosci(And([convert_nnf_to_CNF(Or(ostalo+[el]+konj[1:]), verbose)
+                    return splosci(And([simp_cnf(Or(ostalo+[el]+konj[1:]), verbose)
                                         for el in konj[0].formule]))
-    tmp_cnf = convert_nnf_to_CNF(splosci(simplify(p)), verbose=verbose)
+
+    # Osnovna pretvorba.
+    tmp_cnf = simp_cnf(splosci(simplify(convert_to_cnf_aux(simplify_not((simplify(p)))))))
+
     # Robni primeri.
     if isinstance(tmp_cnf, V) or isinstance(tmp_cnf, Not) or isinstance(tmp_cnf, Fls):
         return And([Or([tmp_cnf])])
     if isinstance(tmp_cnf, Tru):
         return Tru()
+
     # Polovimo proste literatle.
     new_formule = []
     for f in tmp_cnf.formule:
@@ -117,6 +148,7 @@ def convert_to_CNF(p, verbose=False):
             new_formule.append(Or([f]))
         else:
             new_formule.append(f)
+
     return And(new_formule)
 
 
@@ -151,3 +183,44 @@ def splosci(f):
         return p
 
     return splosci_aux(a)
+
+
+def kombinacije(f):
+    """
+    Prejme formulo (logicno) ter nam vrne vse mozne kombinacije na neki visini (ce na formulo gledamo kot drevo).
+    """
+    comb = []
+    for i in f:
+        if isinstance(i, V):
+            comb = kombinacijeGenerator(comb, [i])
+        elif isinstance(i, Not):
+            comb = kombinacijeGenerator(comb, [i])
+        else:
+            comb = kombinacijeGenerator(comb, i.formule)
+    return comb
+
+
+def kombinacijeGenerator(comb, f):
+    """
+    Tole nam generira kombinacije z posamezno vejo.
+    """
+    tempComb = []
+    for i in f:
+        if not comb:
+            return f
+        for j in comb:
+            if isinstance(i, Or):   # S tem preprecimo vgnezdene Or stavke.
+                i = i.formule
+            # Pozorni moramo biti, v kakem formatu dobimo vrednosti.
+            if type(j) == list:
+                if type(i) == list:
+                    tempComb.append(j+i)
+                else:
+                    tempComb.append(j+[i])
+            else:
+                if type(i) == list:
+                    tempComb.append([j]+i)
+                else:
+                    tempComb.append([j, i])
+    # Vrnemo seznam kombinacij.
+    return tempComb
