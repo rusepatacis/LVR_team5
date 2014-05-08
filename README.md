@@ -28,7 +28,7 @@ Zunanje odvisnosti: unittest, time, itertools (vse priloženo pythonu).
 
 Spodnja slika prikazuje graf medsebojnih odvisnosti zgoraj navedenih datotek.
 
-![Graf dependecyjev](http://imgur.com/RvuqM2x)
+[Graf dependecyjev](http://imgur.com/RvuqM2x)
 
 ### Uporaba
 Glej **primeri_uporabe.py**. Na kratko: gradimo poljuben izraz  z operands ali pa uporabimo eno od prevedb; dobljeno formulo lahko nato obdelujemo z metodami iz cnf.py, simplify.py ali pa preprosto poženemo algoritem iz dpll.py, da dobimo rešitev problema SAT (za dano formulo).
