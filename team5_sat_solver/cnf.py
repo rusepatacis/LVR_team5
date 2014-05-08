@@ -48,10 +48,6 @@ def is_CNF_formula(p):
 
 
 def convert_to_CNF(p, verbose=False):
-    #DEPRECATED
-    #Sedaj se uporablja, samo zato, da se pretvori v format, ki ga DPLL premelje.
-    #Kot vhod dobi CNF formulo. Ker je ze v CNF obliki, samo spremeni obliko (dvojni seznami) in ne resuje
-    #se enkrat CNF ja.
     """
     Pretvorba formule v CNF.
     p - formula za pretvorbo
